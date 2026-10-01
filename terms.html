@@ -1,0 +1,820 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050914">
+  <title>Havoc — Terms of Service</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Inter", sans-serif;
+      background:
+        radial-gradient(circle at 50% -10%, rgba(30, 100, 255, 0.18), transparent 35%),
+        #03060d;
+      color: #eaf1ff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* -------------------------
+       BACKGROUND
+    ------------------------- */
+
+    .background {
+      position: fixed;
+      inset: 0;
+      z-index: -10;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .grid {
+      position: absolute;
+      inset: 0;
+      opacity: 0.15;
+      background-image:
+        linear-gradient(rgba(50, 120, 255, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(50, 120, 255, 0.08) 1px, transparent 1px);
+      background-size: 55px 55px;
+      mask-image: linear-gradient(to bottom, black, transparent);
+    }
+
+    .glow {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.18;
+      animation: float 12s ease-in-out infinite alternate;
+    }
+
+    .glow.one {
+      background: #1264ff;
+      top: -300px;
+      left: -200px;
+    }
+
+    .glow.two {
+      background: #003cff;
+      right: -300px;
+      bottom: -300px;
+      animation-delay: -5s;
+    }
+
+    @keyframes float {
+      from {
+        transform: translate3d(0, 0, 0) scale(1);
+      }
+      to {
+        transform: translate3d(80px, 50px, 0) scale(1.15);
+      }
+    }
+
+    /* -------------------------
+       CURSOR CROSSHAIR
+    ------------------------- */
+
+    .cursor {
+      position: fixed;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(75, 145, 255, 0.7);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      box-shadow:
+        0 0 12px rgba(30, 110, 255, 0.65),
+        inset 0 0 12px rgba(30, 110, 255, 0.15);
+      transition:
+        width .2s ease,
+        height .2s ease,
+        border-color .2s ease;
+    }
+
+    .cursor::before,
+    .cursor::after {
+      content: "";
+      position: absolute;
+      background: rgba(100, 165, 255, 0.9);
+      box-shadow: 0 0 8px rgba(40, 125, 255, 0.8);
+    }
+
+    .cursor::before {
+      width: 1px;
+      height: 56px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .cursor::after {
+      height: 1px;
+      width: 56px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .cursor-dot {
+      position: fixed;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow:
+        0 0 8px #4f9cff,
+        0 0 18px #1264ff;
+      pointer-events: none;
+      z-index: 10000;
+      transform: translate(-50%, -50%);
+    }
+
+    /* -------------------------
+       PARTICLES
+    ------------------------- */
+
+    .particle {
+      position: fixed;
+      width: 2px;
+      height: 2px;
+      border-radius: 50%;
+      background: #4f9cff;
+      box-shadow: 0 0 8px #1264ff;
+      opacity: 0.4;
+      pointer-events: none;
+      animation: particleFloat linear infinite;
+    }
+
+    @keyframes particleFloat {
+      from {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+
+      15% {
+        opacity: .5;
+      }
+
+      85% {
+        opacity: .5;
+      }
+
+      to {
+        transform: translateY(-10vh);
+        opacity: 0;
+      }
+    }
+
+    /* -------------------------
+       NAVBAR
+    ------------------------- */
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 7%;
+      background: rgba(3, 6, 13, 0.58);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(90, 140, 255, 0.08);
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      font-size: 20px;
+    }
+
+    .brand-icon {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #1468ff, #0633a9);
+      box-shadow:
+        0 0 20px rgba(20, 104, 255, .35),
+        inset 0 0 12px rgba(255,255,255,.12);
+    }
+
+    .nav-link {
+      color: #8494b3;
+      text-decoration: none;
+      font-size: 14px;
+      transition: .25s;
+    }
+
+    .nav-link:hover {
+      color: #fff;
+      text-shadow: 0 0 15px rgba(80,150,255,.7);
+    }
+
+    /* -------------------------
+       HERO
+    ------------------------- */
+
+    .hero {
+      min-height: 62vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 140px 20px 80px;
+    }
+
+    .badge {
+      padding: 8px 14px;
+      border: 1px solid rgba(65, 135, 255, .25);
+      background: rgba(30, 90, 190, .08);
+      border-radius: 999px;
+      color: #77aaff;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .5px;
+      margin-bottom: 25px;
+      box-shadow: 0 0 25px rgba(20,100,255,.08);
+      animation: fadeDown .8s ease both;
+    }
+
+    .hero h1 {
+      font-size: clamp(50px, 8vw, 94px);
+      line-height: .95;
+      letter-spacing: -5px;
+      font-weight: 800;
+      background: linear-gradient(180deg, #fff 10%, #86aefb 55%, #387fff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 50px rgba(40,110,255,.15);
+      animation: fadeUp .8s ease .1s both;
+    }
+
+    .hero p {
+      max-width: 650px;
+      color: #7f8ca5;
+      margin-top: 25px;
+      line-height: 1.8;
+      font-size: 15px;
+      animation: fadeUp .8s ease .2s both;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(25px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeDown {
+      from {
+        opacity: 0;
+        transform: translateY(-15px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* -------------------------
+       CONTENT
+    ------------------------- */
+
+    main {
+      width: min(1050px, 90%);
+      margin: 0 auto;
+      padding-bottom: 120px;
+    }
+
+    .tos-card {
+      position: relative;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(18, 31, 58, .62),
+          rgba(5, 10, 21, .78)
+        );
+      border: 1px solid rgba(90, 145, 255, .12);
+      border-radius: 24px;
+      padding: 42px;
+      margin-bottom: 22px;
+      overflow: hidden;
+      box-shadow:
+        0 20px 80px rgba(0,0,0,.28),
+        inset 0 1px rgba(255,255,255,.025);
+      opacity: 0;
+      transform: translateY(35px);
+      transition:
+        opacity .7s ease,
+        transform .7s ease,
+        border-color .3s ease,
+        box-shadow .3s ease;
+    }
+
+    .tos-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .tos-card:hover {
+      border-color: rgba(70, 135, 255, .3);
+      box-shadow:
+        0 25px 90px rgba(0,0,0,.35),
+        0 0 40px rgba(25,95,255,.06),
+        inset 0 1px rgba(255,255,255,.035);
+    }
+
+    .tos-card::before {
+      content: "";
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      right: -100px;
+      top: -100px;
+      border-radius: 50%;
+      background: #1468ff;
+      filter: blur(90px);
+      opacity: .08;
+      pointer-events: none;
+    }
+
+    .section-number {
+      color: #4389ff;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .tos-card h2 {
+      font-size: 24px;
+      margin-bottom: 16px;
+      color: #f4f7ff;
+    }
+
+    .tos-card p {
+      color: #9ba8bf;
+      line-height: 1.85;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .tos-card ul {
+      margin: 15px 0 0 20px;
+      color: #9ba8bf;
+    }
+
+    .tos-card li {
+      margin: 9px 0;
+      line-height: 1.6;
+    }
+
+    .highlight {
+      color: #72a8ff;
+      font-weight: 600;
+    }
+
+    .warning {
+      border-left: 3px solid #397fff;
+      background: rgba(40,100,220,.07);
+      padding: 16px 18px;
+      border-radius: 0 12px 12px 0;
+      margin-top: 18px;
+    }
+
+    /* -------------------------
+       FOOTER
+    ------------------------- */
+
+    footer {
+      border-top: 1px solid rgba(80,130,220,.1);
+      padding: 35px 7%;
+      text-align: center;
+      color: #53627c;
+      font-size: 12px;
+    }
+
+    footer strong {
+      color: #779ce0;
+    }
+
+    /* -------------------------
+       RESPONSIVE
+    ------------------------- */
+
+    @media (max-width: 700px) {
+      .cursor,
+      .cursor-dot {
+        display: none;
+      }
+
+      nav {
+        padding: 0 5%;
+      }
+
+      .hero {
+        min-height: 55vh;
+      }
+
+      .hero h1 {
+        letter-spacing: -3px;
+      }
+
+      .tos-card {
+        padding: 26px;
+        border-radius: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="background">
+    <div class="grid"></div>
+    <div class="glow one"></div>
+    <div class="glow two"></div>
+  </div>
+
+  <div class="cursor"></div>
+  <div class="cursor-dot"></div>
+
+  <nav>
+    <div class="brand">
+      <div class="brand-icon">H</div>
+      HAVOC
+    </div>
+
+    <a href="/" class="nav-link">← Back to Home</a>
+  </nav>
+
+  <section class="hero">
+    <div class="badge">LEGAL • TERMS OF SERVICE</div>
+
+    <h1>Terms of Service</h1>
+
+    <p>
+      The rules and conditions governing your use of Havoc.
+      Please read these terms carefully before adding or using
+      Havoc in your Discord server.
+    </p>
+  </section>
+
+  <main>
+
+    <section class="tos-card">
+      <div class="section-number">01 — Acceptance</div>
+      <h2>Acceptance of Terms</h2>
+
+      <p>
+        By adding, accessing, or using Havoc, you acknowledge that
+        you have read, understood, and agree to these Terms of Service.
+        If you do not agree with these terms, you should not use Havoc.
+      </p>
+
+      <p>
+        These terms apply to all users, server owners, administrators,
+        moderators, and other individuals who interact with Havoc.
+      </p>
+    </section>
+
+    <section class="tos-card">
+      <div class="section-number">02 — Service</div>
+      <h2>Use of Havoc</h2>
+
+      <p>
+        Havoc is a Discord bot designed to provide moderation,
+        security, automation, logging, and server-management features.
+      </p>
+
+      <p>You agree to use Havoc only for legitimate purposes and in
+        accordance with Discord's rules and policies.
+      </p>
+
+      <ul>
+        <li>Do not intentionally abuse or exploit Havoc.</li>
+        <li>Do not attempt to bypass Havoc's security systems.</li>
+        <li>Do not use Havoc to facilitate illegal activity.</li>
+        <li>Do not intentionally overload or disrupt the service.</li>
+        <li>Do not attempt unauthorized access to Havoc or its infrastructure.</li>
+      </ul>
+    </section>
+
+    <section class="tos-card">
+      <div class="section-number">03 — Server Administration</div>
+      <h2>Server Responsibility</h2>
+
+      <p>
+        Server owners and administrators are responsible for how
+        Havoc is configured and used within their server.
+      </p>
+
+      <p>
+        Havoc provides tools that can perform significant moderation
+        actions. Administrators should configure permissions,
+        moderation systems, and automated punishments carefully.
+      </p>
+
+      <div class="warning">
+        <p>
+          <span class="highlight">Important:</span>
+          Havoc does not guarantee that automated moderation will
+          always correctly identify every violation. Server staff
+          remain responsible for reviewing and managing their community.
+        </p>
+      </div>
+    </section>
+
+    <section class="tos-card">
+      <div class="section-number">04 — Moderation</div>
+      <h2>Moderation Features</h2>
+
+      <p>
+        Havoc may provide features including bans, kicks, timeouts,
+        warnings, message deletion, AutoMod, anti-raid systems,
+        anti-nuke protection, logging, and other administrative tools.
+      </p>
+
+      <p>
+        Moderation actions performed through Havoc are initiated by
+        authorized server staff or by configured automated systems.
+        Havoc is not responsible for decisions made by server staff.
+      </p>
+    </section>
+
+    <section class="tos-card">
+      <div class="section-number">05 — Security</div>
+      <h2>Security & Anti-Abuse</h2>
+
+      <p>
+        Havoc may monitor relevant Discord events in order to provide
+        security features such as anti-nuke protection, raid detection,
+        moderation logging, and automated server protection.
+      </p>
+
+      <p>
+        Attempts to exploit, reverse engineer, disrupt, overload,
+        or circumvent Havoc's security systems may result in
+        restrictions or termination of access.
+      </p>
+    </section>
+
+    <section class="tos-card">
+      <div class="section-number">06 — Data</div>
+      <h2>Data & Privacy</h2>
+
+      <p>
+        Havoc may store information required to provide its features.
+        Depending on configuration, this may include server settings,
+        user identifiers, moderation records, configuration data,
+        command usage information, and other information necessary
+        for the operation of the bot.
+      </p>
+
+      <p>
+        Information collected by Havoc should only be used for
+        legitimate functionality, security, moderation, and service
+        operation.
+      </p>
+    </section>
+
+    <section class="tos-card">
+      <div class="section-number">07 — Availability</div>
+      <h2>Service Availability</h2>
+
+      <p>
+        Havoc is provided on an availability basis. We may perform
+        maintenance, updates, improvements, or emergency changes
+        that temporarily affect availability.
+      </p>
+
+      <p>
+        We do not guarantee that Havoc will always be available,
+        uninterrupted, or free from errors.
+      </p>
+    </section>
+
+    <section class="tos-card">
+      <div class="section-number">08 — Changes</div>
+      <h2>Changes to These Terms</h2>
+
+      <p>
+        These Terms of Service may be updated from time to time.
+        Updated terms become effective when published on this page
+        unless otherwise stated.
+      </p>
+
+      <p>
+        Continued use of Havoc after changes are published constitutes
+        acceptance of the updated terms.
+      </p>
+    </section>
+
+    <section class="tos-card">
+      <div class="section-number">09 — Termination</div>
+      <h2>Termination & Restrictions</h2>
+
+      <p>
+        Access to Havoc may be restricted or terminated if the service
+        is abused, exploited, intentionally disrupted, or used in a way
+        that violates these terms or applicable platform rules.
+      </p>
+
+      <p>
+        Server owners may remove Havoc from their server at any time.
+      </p>
+    </section>
+
+    <section class="tos-card">
+      <div class="section-number">10 — Disclaimer</div>
+      <h2>Disclaimer</h2>
+
+      <p>
+        Havoc is provided without guarantees regarding the results of
+        moderation, security, or automated systems. Server owners and
+        administrators remain responsible for their servers, members,
+        configurations, and moderation decisions.
+      </p>
+
+      <p>
+        Havoc is an independent Discord application and is not operated
+        by or affiliated with Discord Inc. unless explicitly stated.
+      </p>
+    </section>
+
+    <section class="tos-card">
+      <div class="section-number">11 — Contact</div>
+      <h2>Contact</h2>
+
+      <p>
+        If you have questions regarding these Terms of Service,
+        contact the Havoc development or support team through the
+        official support channels.
+      </p>
+    </section>
+
+  </main>
+
+  <footer>
+    <strong>HAVOC</strong> · Terms of Service · Last Updated 2026
+  </footer>
+
+  <script>
+    /* -------------------------
+       CURSOR
+    ------------------------- */
+
+    const cursor = document.querySelector(".cursor");
+    const dot = document.querySelector(".cursor-dot");
+
+    let mouseX = 0;
+    let mouseY = 0;
+
+    let cursorX = 0;
+    let cursorY = 0;
+
+    document.addEventListener("mousemove", e => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+
+      dot.style.left = mouseX + "px";
+      dot.style.top = mouseY + "px";
+    });
+
+    function animateCursor() {
+      cursorX += (mouseX - cursorX) * 0.15;
+      cursorY += (mouseY - cursorY) * 0.15;
+
+      cursor.style.left = cursorX + "px";
+      cursor.style.top = cursorY + "px";
+
+      requestAnimationFrame(animateCursor);
+    }
+
+    animateCursor();
+
+    /* -------------------------
+       HOVER CURSOR
+    ------------------------- */
+
+    document.querySelectorAll("a, .tos-card").forEach(el => {
+      el.addEventListener("mouseenter", () => {
+        cursor.style.width = "58px";
+        cursor.style.height = "58px";
+      });
+
+      el.addEventListener("mouseleave", () => {
+        cursor.style.width = "42px";
+        cursor.style.height = "42px";
+      });
+    });
+
+    /* -------------------------
+       SCROLL REVEAL
+    ------------------------- */
+
+    const cards = document.querySelectorAll(".tos-card");
+
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          }
+        });
+      },
+      {
+        threshold: 0.12
+      }
+    );
+
+    cards.forEach(card => observer.observe(card));
+
+    /* -------------------------
+       PARTICLES
+    ------------------------- */
+
+    for (let i = 0; i < 35; i++) {
+      const particle = document.createElement("div");
+
+      particle.className = "particle";
+
+      particle.style.left = Math.random() * 100 + "vw";
+      particle.style.animationDuration =
+        8 + Math.random() * 14 + "s";
+
+      particle.style.animationDelay =
+        -Math.random() * 15 + "s";
+
+      particle.style.opacity =
+        0.15 + Math.random() * 0.4;
+
+      document.body.appendChild(particle);
+    }
+
+    /* -------------------------
+       CARD MOUSE GLOW
+    ------------------------- */
+
+    document.querySelectorAll(".tos-card").forEach(card => {
+      card.addEventListener("mousemove", e => {
+        const rect = card.getBoundingClientRect();
+
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        card.style.background = `
+          radial-gradient(
+            500px circle at ${x}px ${y}px,
+            rgba(30, 100, 255, 0.10),
+            rgba(5, 10, 21, 0.78) 55%
+          )
+        `;
+      });
+
+      card.addEventListener("mouseleave", () => {
+        card.style.background = `
+          linear-gradient(
+            145deg,
+            rgba(18, 31, 58, .62),
+            rgba(5, 10, 21, .78)
+          )
+        `;
+      });
+    });
+  </script>
+
+</body>
+</html>
+```
