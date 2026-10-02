@@ -118,6 +118,24 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* DISCORD BUTTON */
+    .discord-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      margin-top: 34px; padding: 14px 28px;
+      border-radius: 999px; text-decoration: none;
+      color: #fff; font-size: 15px; font-weight: 700;
+      background: linear-gradient(135deg, #1468ff, #0633a9);
+      border: 1px solid rgba(120,170,255,.35);
+      box-shadow: 0 0 28px rgba(20,104,255,.4), inset 0 0 12px rgba(255,255,255,.12);
+      transition: transform .25s ease, box-shadow .25s ease;
+      animation: fadeUp .8s ease .3s both;
+    }
+    .discord-btn:hover, .discord-btn:focus-visible {
+      transform: translateY(-3px);
+      box-shadow: 0 0 42px rgba(40,125,255,.65), inset 0 0 12px rgba(255,255,255,.18);
+      outline: none;
+    }
+
     /* LINK CARDS */
     main { width: min(1050px, 90%); margin: 0 auto; padding-bottom: 120px; }
     .links {
@@ -197,6 +215,10 @@
       Moderation, security, and server management for Discord.
       Choose a page below to get started.
     </p>
+
+    <a class="discord-btn" href="https://discord.com/invite/invitehavoc" target="_blank" rel="noopener noreferrer">
+      Join the Discord for more updates! →
+    </a>
   </section>
 
   <main>
