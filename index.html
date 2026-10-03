@@ -414,16 +414,27 @@
     document.querySelectorAll(".feature, .cta").forEach(el => observer.observe(el));
 
     // ------------------------------------------------------------
-    // LIVE STATS + SERVER MARQUEE
+    // FEATURED SERVERS - edit this list, no bot needed.
     //
-    // The bot (publish_stats in bot.py) commits stats.json to this repo every
-    // 15 minutes. The page reads that file, so the numbers and the scrolling
-    // server row always match the IDs in FEATURED_IDS.
+    // Option A (automatic): give an invite code. The page asks Discord for the
+    //   server's name, icon and live member count.
+    //     { invite: "abc123" }          // from discord.gg/abc123
+    //   The invite must be permanent (never expires), or it will stop working.
     //
-    // Expected JSON: { "users": 0, "communities": 0,
-    //   "servers": [ { "name": "Server", "icon": "https://cdn.discordapp.com/...", "members": 0 } ] }
+    // Option B (manual): type everything yourself.
+    //     { name: "My Server", icon: "https://cdn.discordapp.com/icons/ID/HASH.png", members: 1200 }
+    //   (Right-click the server's icon in Discord > Copy Image Address won't work
+    //   on your own icon, but any cdn.discordapp.com icon URL does. No icon = a
+    //   letter circle is shown.)
     // ------------------------------------------------------------
-    const STATS_URL = "stats.json";
+    const SERVERS = [
+      // { invite: "yourinvitecode" },
+      // { name: "Example Server", icon: "", members: 1500 },
+    ];
+
+    // Optional: set your own totals for the "Powering X users across Y communities" line.
+    // Leave as null to use the sum of the servers listed above.
+    const TOTALS = null;   // e.g. { users: 25000, communities: 12 }
 
     const fmt = n => Number(n || 0).toLocaleString();
 
@@ -453,37 +464,48 @@
 
     let lastKey = "";
 
-    async function loadStats() {
+    async function resolveServer(s) {
+      if (!s.invite) return s;
       try {
-        const res = await fetch(STATS_URL + "?t=" + Date.now(), { cache: "no-store" });
-        if (!res.ok) throw new Error("stats.json not found");
-        const data = await res.json();
-
-        document.getElementById("stat-users").textContent = fmt(data.users);
-        document.getElementById("stat-communities").textContent = fmt(data.communities);
-
-        const servers = Array.isArray(data.servers) ? data.servers : [];
-        const marquee = document.querySelector(".marquee");
-        const track = document.getElementById("marquee-track");
-
-        // Only rebuild the scrolling row when the server list actually changed,
-        // so the animation doesn't restart every refresh
-        const key = JSON.stringify(servers);
-        if (key !== lastKey) {
-          lastKey = key;
-          track.innerHTML = "";
-          if (servers.length) {
-            // Repeat the list (an even number of copies) so the loop is seamless
-            const k = Math.max(1, Math.ceil(1100 / (servers.length * 270)));
-            for (let i = 0; i < k * 2; i++) servers.forEach(s => track.appendChild(buildServer(s)));
-            track.style.animationDuration = Math.max(20, k * servers.length * 6) + "s";
-          }
-        }
-        marquee.hidden = !servers.length;
-        document.getElementById("stats").hidden = false;
+        const r = await fetch("https://discord.com/api/v10/invites/" + encodeURIComponent(s.invite) + "?with_counts=true");
+        if (!r.ok) throw new Error("invite lookup failed");
+        const d = await r.json();
+        const g = d.guild || {};
+        return {
+          name: s.name || g.name || "Server",
+          icon: s.icon || (g.icon ? `https://cdn.discordapp.com/icons/${g.id}/${g.icon}.png?size=128` : ""),
+          members: d.approximate_member_count ?? s.members ?? 0,
+        };
       } catch (e) {
-        // On a failed refresh, keep whatever is already on screen
+        return s.name ? s : null;   // fall back to manual fields if you gave them
       }
+    }
+
+    async function loadStats() {
+      const servers = (await Promise.all(SERVERS.map(resolveServer))).filter(Boolean)
+        .sort((a, b) => (b.members || 0) - (a.members || 0));
+      const marquee = document.querySelector(".marquee");
+      const track = document.getElementById("marquee-track");
+
+      const users = TOTALS ? TOTALS.users : servers.reduce((n, s) => n + (s.members || 0), 0);
+      const communities = TOTALS ? TOTALS.communities : servers.length;
+      document.getElementById("stat-users").textContent = fmt(users);
+      document.getElementById("stat-communities").textContent = fmt(communities);
+
+      // Only rebuild the scrolling row when the list actually changed
+      const key = JSON.stringify(servers);
+      if (key !== lastKey) {
+        lastKey = key;
+        track.innerHTML = "";
+        if (servers.length) {
+          // Repeat the list (an even number of copies) so the loop is seamless
+          const k = Math.max(1, Math.ceil(1100 / (servers.length * 270)));
+          for (let i = 0; i < k * 2; i++) servers.forEach(s => track.appendChild(buildServer(s)));
+          track.style.animationDuration = Math.max(20, k * servers.length * 6) + "s";
+        }
+      }
+      marquee.hidden = !servers.length;
+      document.getElementById("stats").hidden = !servers.length && !TOTALS;
     }
 
     loadStats();
