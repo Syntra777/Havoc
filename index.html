@@ -167,7 +167,6 @@
       display: flex; gap: 56px; width: max-content;
       animation: scroll 40s linear infinite;
     }
-    .marquee:hover .marquee-track { animation-play-state: paused; }
     @keyframes scroll { to { transform: translateX(calc(-50% - 28px)); } }
     .srv { display: flex; align-items: center; gap: 14px; text-align: left; white-space: nowrap; }
     .srv-icon {
@@ -413,75 +412,101 @@
     }, { threshold: 0.12 });
     document.querySelectorAll(".feature, .cta").forEach(el => observer.observe(el));
 
-    // Live stats + server marquee
-    // Set this to your bot's API URL once it exists. Leave "" to keep the section hidden.
+    // ------------------------------------------------------------
+    // LIVE STATS + SERVER MARQUEE
+    //
+    // AUTO-UPDATE: when your bot has a /stats endpoint, put its URL here,
+    // e.g. "https://havoc-bot.up.railway.app/stats", and the page will
+    // refresh the numbers every 60 seconds. Leave "" to use MANUAL_DATA.
+    //
     // Expected JSON: { "users": 0, "communities": 0,
     //   "servers": [ { "name": "Server", "icon": "https://cdn.discordapp.com/...", "members": 0 } ] }
+    // ------------------------------------------------------------
     const API_URL = "";
 
-    // Optional manual list, used only while API_URL is empty. Delete it once the API is connected.
-    // Only add servers whose owners have agreed to be shown.
+    // PLACEHOLDER DATA so the section works right now.
+    // Replace these with your real numbers and servers (or delete the
+    // entries and set API_URL). Only list servers whose owners agreed.
     const MANUAL_DATA = {
-      users: 0,        // total members across your servers
-      communities: 0,  // number of servers
+      users: 12500,
+      communities: 8,
       servers: [
-        // { name: "Server Name", icon: "", members: 123 },
+        { name: "Example Server 1", icon: "", members: 5200 },
+        { name: "Example Server 2", icon: "", members: 3100 },
+        { name: "Example Server 3", icon: "", members: 1800 },
+        { name: "Example Server 4", icon: "", members: 950 },
+        { name: "Example Server 5", icon: "", members: 640 },
       ],
     };
 
-    (async () => {
+    const fmt = n => Number(n || 0).toLocaleString();
+
+    function buildServer(s) {
+      const item = document.createElement("div");
+      item.className = "srv";
+      const name = String(s.name || "Server");
+      const icon = String(s.icon || "");
+      let img;
+      if (icon.startsWith("https://cdn.discordapp.com/")) {
+        img = document.createElement("img");
+        img.src = icon; img.alt = ""; img.loading = "lazy";
+      } else {
+        img = document.createElement("div");
+        img.textContent = name.charAt(0).toUpperCase();
+      }
+      img.className = "srv-icon";
+      const text = document.createElement("div");
+      const n = document.createElement("div");
+      n.className = "srv-name"; n.textContent = name;
+      const m = document.createElement("div");
+      m.className = "srv-members"; m.textContent = fmt(s.members) + " members";
+      text.append(n, m);
+      item.append(img, text);
+      return item;
+    }
+
+    let lastKey = "";
+
+    async function loadStats() {
       try {
         let data;
         if (API_URL) {
-          const res = await fetch(API_URL);
-          if (!res.ok) return;
+          const res = await fetch(API_URL, { cache: "no-store" });
+          if (!res.ok) throw new Error("bad response");
           data = await res.json();
-        } else if (MANUAL_DATA.servers.length) {
-          data = MANUAL_DATA;
         } else {
-          return;
+          data = MANUAL_DATA;
         }
-        const fmt = n => Number(n || 0).toLocaleString();
+
         document.getElementById("stat-users").textContent = fmt(data.users);
         document.getElementById("stat-communities").textContent = fmt(data.communities);
 
         const servers = Array.isArray(data.servers) ? data.servers : [];
+        const marquee = document.querySelector(".marquee");
         const track = document.getElementById("marquee-track");
-        const build = s => {
-          const item = document.createElement("div");
-          item.className = "srv";
-          const name = String(s.name || "Server");
-          const icon = String(s.icon || "");
-          let img;
-          if (icon.startsWith("https://cdn.discordapp.com/")) {
-            img = document.createElement("img");
-            img.src = icon; img.alt = ""; img.loading = "lazy";
-          } else {
-            img = document.createElement("div");
-            img.textContent = name.charAt(0).toUpperCase();
+
+        // Only rebuild the scrolling row when the server list actually changed,
+        // so the animation doesn't restart every refresh
+        const key = JSON.stringify(servers);
+        if (key !== lastKey) {
+          lastKey = key;
+          track.innerHTML = "";
+          if (servers.length) {
+            // Repeat the list (an even number of copies) so the loop is seamless
+            const k = Math.max(1, Math.ceil(1800 / (servers.length * 260)));
+            for (let i = 0; i < k * 2; i++) servers.forEach(s => track.appendChild(buildServer(s)));
+            track.style.animationDuration = Math.max(20, k * servers.length * 6) + "s";
           }
-          img.className = "srv-icon";
-          const text = document.createElement("div");
-          const n = document.createElement("div");
-          n.className = "srv-name"; n.textContent = name;
-          const m = document.createElement("div");
-          m.className = "srv-members"; m.textContent = fmt(s.members) + " members";
-          text.append(n, m);
-          item.append(img, text);
-          return item;
-        };
-        if (servers.length) {
-          // Repeat the list (an even number of copies) so the loop is seamless
-          // and the row stays full even when there are only a few servers
-          const k = Math.max(1, Math.ceil(1800 / (servers.length * 260)));
-          for (let i = 0; i < k * 2; i++) servers.forEach(s => track.appendChild(build(s)));
-          track.style.animationDuration = Math.max(20, k * servers.length * 6) + "s";
-        } else {
-          track.parentElement.hidden = true;
         }
+        marquee.hidden = !servers.length;
         document.getElementById("stats").hidden = false;
-      } catch (e) { /* leave the section hidden */ }
-    })();
+      } catch (e) {
+        // On a failed refresh, keep whatever is already on screen
+      }
+    }
+
+    loadStats();
+    setInterval(loadStats, 60000);
 
     // Particles
     for (let i = 0; i < 35; i++) {
