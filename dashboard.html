@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#050914">
+<title>Havoc — Dashboard</title>
+<link rel="icon" href="havoc-logo.png">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--text:#eaf1ff;--dim:#8494b3;--line:rgba(90,145,255,.14);--card:linear-gradient(145deg,rgba(18,31,58,.62),rgba(5,10,21,.78));--blue:#1468ff}
+body{font-family:"Inter",sans-serif;background:radial-gradient(circle at 50% -10%,rgba(30,100,255,.18),transparent 35%),#03060d;color:var(--text);min-height:100vh}
+nav{position:fixed;top:0;left:0;right:0;height:74px;display:flex;align-items:center;justify-content:space-between;padding:0 7%;background:rgba(3,6,13,.58);backdrop-filter:blur(18px);border-bottom:1px solid rgba(90,140,255,.08);z-index:10}
+a.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit;font-weight:800;letter-spacing:-.5px;font-size:20px}
+a.brand img{width:34px;height:34px;object-fit:contain}
+.nav-links{display:flex;align-items:center;gap:26px}
+.nav-links a,.nav-links button.link{color:var(--dim);text-decoration:none;font-size:14px;background:none;border:0;font-family:inherit;cursor:pointer}
+.nav-links a:hover,.nav-links button.link:hover{color:#fff}
+main{width:min(900px,90%);margin:0 auto;padding:130px 0 120px}
+h1{font-size:clamp(28px,5vw,40px);letter-spacing:-1.5px;font-weight:800;margin-bottom:6px}
+h2{font-size:17px;margin-bottom:14px}
+.sub{color:var(--dim);font-size:14px;line-height:1.7;margin-bottom:30px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px;margin-bottom:18px}
+label.f{display:block;color:var(--dim);font-size:13px;margin:14px 0 6px}
+input,select,textarea,button{font:inherit;color:var(--text)}
+input[type=text],input[type=number],select,textarea{width:100%;background:rgba(3,6,13,.7);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px}
+textarea{min-height:70px;resize:vertical}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 22px;border-radius:999px;text-decoration:none;font-size:14px;font-weight:700;color:#fff;cursor:pointer;border:1px solid rgba(120,170,255,.35);background:linear-gradient(135deg,#1468ff,#0633a9);box-shadow:0 0 24px rgba(20,104,255,.35)}
+.btn.ghost{background:rgba(30,90,190,.08);border-color:rgba(90,145,255,.25);box-shadow:none}
+.btn.small{padding:7px 14px;font-size:13px}
+.hidden{display:none!important}
+.servers{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.srv{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+.srv .ico{width:44px;height:44px;border-radius:12px;background:#12203d;display:grid;place-items:center;font-weight:700;object-fit:cover;flex:none}
+.srv b{flex:1;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tabs{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+.tabs button{background:none;border:1px solid var(--line);border-radius:999px;padding:8px 18px;font-size:14px;color:var(--dim);cursor:pointer}
+.tabs button.on{background:rgba(30,90,190,.18);color:#fff;border-color:rgba(90,145,255,.4)}
+.chk{display:flex;align-items:center;gap:12px;padding:8px 0;font-size:14px}
+.chk input{width:18px;height:18px;accent-color:var(--blue);flex:none}
+.cmd{display:flex;align-items:center;gap:14px;padding:10px 0;border-top:1px solid rgba(90,145,255,.08)}
+.cmd:first-of-type{border-top:0}
+.cmd input{width:18px;height:18px;accent-color:var(--blue);flex:none}
+.cmd b{font-size:14px;min-width:110px}
+.cmd span{color:var(--dim);font-size:13px}
+.cat{color:#77aaff;font-size:13px;font-weight:600;margin:20px 0 4px}
+.cat:first-child{margin-top:0}
+.rule{display:grid;grid-template-columns:90px 1fr 1fr auto;gap:8px;margin-bottom:8px}
+.trig{display:grid;grid-template-columns:1fr 130px auto;gap:8px;margin-bottom:8px}
+.trig textarea{grid-column:1/3;min-height:56px}
+.bar{position:fixed;bottom:0;left:0;right:0;padding:14px 7%;background:rgba(3,6,13,.8);backdrop-filter:blur(18px);border-top:1px solid rgba(90,140,255,.08);display:flex;gap:14px;align-items:center;justify-content:center}
+#msg{color:var(--dim);font-size:14px}
+@media(max-width:700px){nav{padding:0 5%}.rule{grid-template-columns:1fr 1fr}.trig{grid-template-columns:1fr}.trig textarea{grid-column:auto}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="brand" href="index.html"><img src="havoc-logo.png" alt="Havoc">HAVOC</a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="terms.html">Terms</a>
+    <a href="privacy.html">Privacy</a>
+    <button class="link hidden" id="logout" type="button">Log out</button>
+  </div>
+</nav>
+
+<main>
+  <section id="v-login" class="hidden">
+    <h1>Dashboard</h1>
+    <p class="sub">Log in with Discord to manage Havoc in the servers you own or manage.</p>
+    <a class="btn" id="login">Log in with Discord</a>
+  </section>
+
+  <section id="v-servers" class="hidden">
+    <h1>Your servers</h1>
+    <p class="sub" id="hello"></p>
+    <div class="servers" id="servers"></div>
+  </section>
+
+  <section id="v-config" class="hidden">
+    <button class="btn ghost small" id="back" type="button">Back to servers</button>
+    <h1 style="margin-top:18px" id="gname"></h1>
+    <p class="sub">Changes apply to this server only, after you save.</p>
+    <div class="tabs" id="tabs">
+      <button data-t="general" class="on" type="button">General</button>
+      <button data-t="commands" type="button">Commands</button>
+      <button data-t="warnings" type="button">Warnings</button>
+      <button data-t="triggers" type="button">Triggers</button>
+    </div>
+
+    <div id="t-general">
+      <div class="card"><h2>Logging</h2>
+        <label class="f" for="log_channel">Default log channel</label><select id="log_channel"></select></div>
+      <div class="card"><h2>Protection</h2><div id="toggles"></div>
+        <label class="f" for="minage">Kick accounts younger than this many days (0 turns it off)</label>
+        <input type="number" id="minage" min="0" max="365"></div>
+      <div class="card"><h2>New members</h2>
+        <label class="f" for="autorole">Role given on join</label><select id="autorole"></select>
+        <label class="f" for="welcome_channel">Welcome channel</label><select id="welcome_channel"></select>
+        <label class="f" for="welcome_msg">Welcome message. Variables: {user} {name} {server} {count}</label>
+        <textarea id="welcome_msg"></textarea></div>
+    </div>
+
+    <div id="t-commands" class="hidden">
+      <div class="card"><h2>Commands</h2>
+        <p class="sub" style="margin-bottom:14px">Turn off any command you don't want used in this server. Disabled commands stop working as both slash and prefix commands.</p>
+        <input type="text" id="cmdsearch" placeholder="Search commands" aria-label="Search commands">
+        <div id="cmds" style="margin-top:8px"></div></div>
+    </div>
+
+    <div id="t-warnings" class="hidden">
+      <div class="card"><h2>Warning actions</h2>
+        <p class="sub" style="margin-bottom:14px">What happens automatically when a member reaches a number of warnings.</p>
+        <div id="rules"></div><button class="btn ghost small" id="addrule" type="button">Add rule</button></div>
+    </div>
+
+    <div id="t-triggers" class="hidden">
+      <div class="card"><h2>Triggers</h2>
+        <p class="sub" style="margin-bottom:14px">When a message matches a phrase, Havoc replies automatically. Replies can use {user} {name} {server} {count}. Each trigger fires at most once every 5 seconds per channel.</p>
+        <div id="trigs"></div><button class="btn ghost small" id="addtrig" type="button">Add trigger</button></div>
+    </div>
+
+    <div class="bar"><button class="btn" id="save" type="button">Save changes</button><span id="msg"></span></div>
+  </section>
+</main>
+
+<script>
+const API = "https://api.havoc.website";
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TOGGLES = [["antinuke","Anti-nuke"],["raidmode","Raid mode"],["automod_spam","Block spam"],["automod_links","Block links"],
+  ["automod_invites","Block invites"],["automod_caps","Block excessive caps"],["automod_mentions","Block mass mentions"]];
+let gid = null, cfg = null;
+
+async function api(path, opts = {}) {
+  const r = await fetch(API + "/api" + path, { credentials: "include", ...opts });
+  if (r.status === 401) { view("login"); throw new Error("login"); }
+  if (!r.ok) throw new Error(r.status);
+  return r.json();
+}
+function view(v) {
+  ["login", "servers", "config"].forEach(n => $("v-" + n).classList.toggle("hidden", n !== v));
+  $("logout").classList.toggle("hidden", v === "login");
+}
+function fill(sel, items, cur, empty) {
+  sel.innerHTML = `<option value="">${empty}</option>` + items.map(i => `<option value="${i.id}">${esc(i.name)}</option>`).join("");
+  sel.value = cur || "";
+}
+
+async function init() {
+  $("login").href = API + "/api/login";
+  try {
+    const me = await api("/me");
+    $("hello").textContent = me.guilds.length ? `Logged in as ${me.name}. Pick a server to configure.`
+      : "No servers found. You need to own the server or have the Manage Server permission.";
+    $("servers").innerHTML = me.guilds.map(g => `<div class="srv">
+      ${g.icon ? `<img class="ico" src="${g.icon}" alt="">` : `<span class="ico">${esc(g.name[0])}</span>`}
+      <b>${esc(g.name)}</b>
+      ${g.has_bot ? `<button class="btn small" data-id="${g.id}" data-name="${esc(g.name)}" type="button">Configure</button>`
+                  : `<a class="btn ghost small" href="${g.invite}" target="_blank" rel="noopener noreferrer">Add bot</a>`}</div>`).join("");
+    view("servers");
+  } catch (e) {}
+}
+
+async function openGuild(id, name) {
+  gid = id;
+  cfg = await api(`/guilds/${id}/config`);
+  $("gname").textContent = name;
+  const s = cfg.settings;
+  fill($("log_channel"), cfg.channels, s.log_channel, "Not set");
+  fill($("welcome_channel"), cfg.channels, s.welcome_channel, "Off");
+  fill($("autorole"), cfg.roles, s.autorole, "Off");
+  $("welcome_msg").value = s.welcome_msg || "";
+  $("minage").value = s.minage || 0;
+  $("toggles").innerHTML = TOGGLES.map(([k, n]) =>
+    `<label class="chk"><input type="checkbox" data-k="${k}" ${s[k] === "1" ? "checked" : ""}>${n}</label>`).join("");
+  $("rules").innerHTML = "";
+  Object.entries(cfg.punish).sort((a, b) => a[0] - b[0]).forEach(([n, v]) => { const [a, d] = v.split("|"); addRule(n, a, d); });
+  $("trigs").innerHTML = "";
+  cfg.triggers.forEach(t => addTrig(t));
+  renderCmds();
+  tab("general");
+  $("msg").textContent = "";
+  view("config");
+}
+
+function renderCmds() {
+  const q = $("cmdsearch").value.trim().toLowerCase();
+  let html = "";
+  cfg.categories.forEach(cat => {
+    const list = cfg.commands.filter(c => c.category === cat && (!q || c.name.includes(q) || c.description.toLowerCase().includes(q)));
+    if (!list.length) return;
+    html += `<div class="cat">${cat}</div>` + list.map(c =>
+      `<label class="cmd"><input type="checkbox" data-c="${c.name}" ${c.enabled ? "checked" : ""}><b>${c.name}</b><span>${esc(c.description)}</span></label>`).join("");
+  });
+  $("cmds").innerHTML = html || `<p class="sub">No commands match.</p>`;
+}
+
+function addRule(n = "", action = "timeout", dur = "1h") {
+  const d = document.createElement("div");
+  d.className = "rule";
+  d.innerHTML = `<input type="number" min="1" placeholder="Warns" value="${n}" aria-label="Warning count">
+    <select aria-label="Action"><option>timeout</option><option>kick</option><option>ban</option></select>
+    <input type="text" placeholder="Duration, e.g. 1h" value="${esc(dur || "")}" aria-label="Timeout duration">
+    <button class="btn ghost small" type="button">Remove</button>`;
+  d.querySelector("select").value = action;
+  d.querySelector("button").onclick = () => d.remove();
+  $("rules").appendChild(d);
+}
+
+function addTrig(t = { phrase: "", response: "", match: "contains" }) {
+  if (document.querySelectorAll(".trig").length >= 50) return;
+  const d = document.createElement("div");
+  d.className = "trig";
+  d.innerHTML = `<input type="text" placeholder="When a message matches" value="${esc(t.phrase)}" maxlength="100" aria-label="Trigger phrase">
+    <select aria-label="Match type"><option value="contains">contains</option><option value="exact">is exactly</option><option value="starts">starts with</option></select>
+    <button class="btn ghost small" type="button">Remove</button>
+    <textarea placeholder="Havoc replies with" maxlength="1000" aria-label="Reply">${esc(t.response)}</textarea>`;
+  d.querySelector("select").value = t.match;
+  d.querySelector("button").onclick = () => d.remove();
+  $("trigs").appendChild(d);
+}
+
+function tab(t) {
+  document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("on", b.dataset.t === t));
+  ["general", "commands", "warnings", "triggers"].forEach(n => $("t-" + n).classList.toggle("hidden", n !== t));
+}
+
+async function save() {
+  const settings = {
+    log_channel: $("log_channel").value, welcome_channel: $("welcome_channel").value, autorole: $("autorole").value,
+    welcome_msg: $("welcome_msg").value, minage: String(Math.max(0, +$("minage").value || 0)),
+  };
+  document.querySelectorAll("#toggles input").forEach(c => settings[c.dataset.k] = c.checked ? "1" : "0");
+  const punish = {};
+  document.querySelectorAll(".rule").forEach(r => {
+    const [n, a, d] = r.querySelectorAll("input,select");
+    if (n.value) punish[n.value] = a.value + "|" + (d.value || "1h");
+  });
+  const triggers = [...document.querySelectorAll(".trig")].map(t => ({
+    phrase: t.querySelector("input").value, match: t.querySelector("select").value, response: t.querySelector("textarea").value }));
+  const disabled = cfg.commands.filter(c => !c.enabled).map(c => c.name);
+  $("msg").textContent = "Saving...";
+  try {
+    await api(`/guilds/${gid}/config`, { method: "PUT", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ settings, punish, disabled, triggers }) });
+    $("msg").textContent = "Saved.";
+  } catch (e) { $("msg").textContent = "Could not save. Check your permissions and try again."; }
+}
+
+$("servers").onclick = e => { const b = e.target.closest("button[data-id]"); if (b) openGuild(b.dataset.id, b.dataset.name); };
+$("cmds").onchange = e => { const c = cfg.commands.find(x => x.name === e.target.dataset.c); if (c) c.enabled = e.target.checked; };
+$("cmdsearch").oninput = renderCmds;
+$("tabs").onclick = e => { if (e.target.dataset.t) tab(e.target.dataset.t); };
+$("addrule").onclick = () => addRule();
+$("addtrig").onclick = () => addTrig();
+$("save").onclick = save;
+$("back").onclick = () => init();
+$("logout").onclick = async () => { await fetch(API + "/api/logout", { method: "POST", credentials: "include" }); view("login"); };
+init();
+</script>
+</body>
+</html>
