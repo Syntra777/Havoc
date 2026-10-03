@@ -428,9 +428,19 @@
     //   letter circle is shown.)
     // ------------------------------------------------------------
     const SERVERS = [
-      // { invite: "yourinvitecode" },
+      { invite: "sillycfgs" },
+      { invite: "sMRj4BCXm6" },
+      { invite: "emg9KJQ4S7" },
+      { invite: "EJZtWnGgGt" },
+      { invite: "axsCqHQG9P" },
+      { invite: "uuQfEESjTZ" },
+      { invite: "yYtXHwhvCw" },
       // { name: "Example Server", icon: "", members: 1500 },
     ];
+
+    // Servers published by the bot (stats.json in this repo). If the bot is
+    // running, every server it reports is added to the row automatically.
+    const STATS_URL = "stats.json";
 
     // Optional: set your own totals for the "Powering X users across Y communities" line.
     // Leave as null to use the sum of the servers listed above.
@@ -481,14 +491,29 @@
       }
     }
 
+    async function loadBotStats() {
+      try {
+        const r = await fetch(STATS_URL + "?t=" + Date.now(), { cache: "no-store" });
+        return r.ok ? await r.json() : null;
+      } catch (e) { return null; }
+    }
+
     async function loadStats() {
-      const servers = (await Promise.all(SERVERS.map(resolveServer))).filter(Boolean)
+      const [listed, bot] = await Promise.all([
+        Promise.all(SERVERS.map(resolveServer)),
+        loadBotStats(),
+      ]);
+      // Hand-listed servers first, then everything the bot reports (no duplicates by name)
+      const seen = new Set();
+      const servers = [...listed.filter(Boolean), ...((bot && Array.isArray(bot.servers)) ? bot.servers : [])]
+        .filter(s => { const k = String(s.name).toLowerCase(); if (seen.has(k)) return false; seen.add(k); return true; })
         .sort((a, b) => (b.members || 0) - (a.members || 0));
       const marquee = document.querySelector(".marquee");
       const track = document.getElementById("marquee-track");
 
-      const users = TOTALS ? TOTALS.users : servers.reduce((n, s) => n + (s.members || 0), 0);
-      const communities = TOTALS ? TOTALS.communities : servers.length;
+      const sum = servers.reduce((n, s) => n + (s.members || 0), 0);
+      const users = TOTALS ? TOTALS.users : (bot ? bot.users : sum);
+      const communities = TOTALS ? TOTALS.communities : (bot ? bot.communities : servers.length);
       document.getElementById("stat-users").textContent = fmt(users);
       document.getElementById("stat-communities").textContent = fmt(communities);
 
