@@ -154,32 +154,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* STATS + SERVER MARQUEE */
-    .stats { text-align: center; padding: 0 20px 70px; margin-top: -30px; }
-    .stats-line { color: #7f8ca5; font-size: 15px; }
-    .stats-line strong { color: #fff; font-weight: 700; }
-    .marquee {
-      margin: 34px auto 0; max-width: 1020px; overflow: hidden;
-      mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
-      -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
-    }
-    .marquee-track {
-      display: flex; gap: 40px; width: max-content;
-      animation: scroll 40s linear infinite;
-    }
-    @keyframes scroll { to { transform: translateX(calc(-50% - 20px)); } }
-    .srv { display: flex; align-items: center; gap: 14px; text-align: left; white-space: nowrap; width: 230px; flex-shrink: 0; }
-    .srv > div:last-child { min-width: 0; }
-    .srv-icon {
-      width: 56px; height: 56px; border-radius: 50%; object-fit: cover; flex-shrink: 0;
-      background: linear-gradient(135deg, #1468ff, #0633a9);
-      display: grid; place-items: center; font-weight: 800; color: #fff;
-    }
-    .srv-name { font-weight: 700; font-size: 15px; color: #f4f7ff; display: flex; align-items: center; gap: 6px; min-width: 0; }
-    .srv-name .t { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
-    .srv-badge { width: 16px; height: 16px; flex-shrink: 0; object-fit: contain; }
-    .srv-members { font-size: 12px; color: #6f7f9c; margin-top: 3px; }
-
     /* SECTIONS */
     section.block { width: min(1100px, 90%); margin: 0 auto; padding: 90px 0 30px; }
     .section-head { text-align: center; margin-bottom: 50px; }
@@ -311,14 +285,6 @@
     </div>
   </section>
 
-  <section class="stats" id="stats" hidden>
-    <div class="stats-line">
-      Powering <strong id="stat-users">0</strong> users across
-      <strong id="stat-communities">0</strong> communities
-    </div>
-    <div class="marquee"><div class="marquee-track" id="marquee-track"></div></div>
-  </section>
-
   <section class="block" id="features">
     <div class="section-head">
       <h2>Everything your server needs to stay safe</h2>
@@ -414,157 +380,6 @@
       });
     }, { threshold: 0.12 });
     document.querySelectorAll(".feature, .cta").forEach(el => observer.observe(el));
-
-    // ------------------------------------------------------------
-    // FEATURED SERVERS - edit this list, no bot needed.
-    //
-    // Option A (automatic): give an invite code. The page asks Discord for the
-    //   server's name, icon and live member count.
-    //     { invite: "abc123" }          // from discord.gg/abc123
-    //   The invite must be permanent (never expires), or it will stop working.
-    //
-    // Option B (manual): type everything yourself.
-    //     { name: "My Server", icon: "https://cdn.discordapp.com/icons/ID/HASH.png", members: 1200, badge: "verified" }   // badge: "partnered", "verified", "community" or omit
-    //   (Right-click the server's icon in Discord > Copy Image Address won't work
-    //   on your own icon, but any cdn.discordapp.com icon URL does. No icon = a
-    //   letter circle is shown.)
-    // ------------------------------------------------------------
-    const SERVERS = [
-      { invite: "sillycfgs" },
-      { invite: "sMRj4BCXm6" },
-      { invite: "emg9KJQ4S7" },
-      { invite: "EJZtWnGgGt" },
-      { invite: "axsCqHQG9P" },
-      { invite: "uuQfEESjTZ" },
-      { invite: "yYtXHwhvCw" },
-      // { name: "Example Server", icon: "", members: 1500 },
-    ];
-
-    // Servers published by the bot (stats.json in this repo). If the bot is
-    // running, every server it reports is added to the row automatically.
-    const STATS_URL = "stats.json";
-
-    // Optional: set your own totals for the "Powering X users across Y communities" line.
-    // Leave as null to use the sum of the servers listed above.
-    const TOTALS = null;   // e.g. { users: 25000, communities: 12 }
-
-    const fmt = n => Number(n || 0).toLocaleString();
-
-    // Server badges use image files in the repo: badges/partnered.png, badges/verified.png,
-    // badges/community.png (.png; swap the extension below if you use .svg).
-    // Servers without a badge get nothing.
-    const BADGE_EXT = "png";
-    const BADGE_TITLES = { partnered: "Discord Partner", verified: "Verified", community: "Community Server" };
-
-    function badgeEl(type) {
-      const img = document.createElement("img");
-      img.className = "srv-badge";
-      img.src = "badges/" + type + "." + BADGE_EXT;
-      img.alt = BADGE_TITLES[type];
-      img.title = BADGE_TITLES[type];
-      img.onerror = () => img.remove();   // file missing: show nothing rather than a broken icon
-      return img;
-    }
-
-    function buildServer(s) {
-      const item = document.createElement("div");
-      item.className = "srv";
-      const name = String(s.name || "Server");
-      const icon = String(s.icon || "");
-      let img;
-      if (icon.startsWith("https://cdn.discordapp.com/")) {
-        img = document.createElement("img");
-        img.src = icon; img.alt = ""; img.loading = "lazy";
-      } else {
-        img = document.createElement("div");
-        img.textContent = name.charAt(0).toUpperCase();
-      }
-      img.className = "srv-icon";
-      const text = document.createElement("div");
-      const n = document.createElement("div");
-      n.className = "srv-name";
-      const t = document.createElement("span"); t.className = "t"; t.textContent = name;
-      n.appendChild(t);
-      if (BADGE_TITLES[s.badge]) n.appendChild(badgeEl(s.badge));
-      const m = document.createElement("div");
-      m.className = "srv-members"; m.textContent = fmt(s.members) + " members";
-      text.append(n, m);
-      item.append(img, text);
-      return item;
-    }
-
-    let lastKey = "";
-
-    // Highest badge wins: partnered > verified > community. No flag, no badge.
-    function badgeFor(features) {
-      const f = features || [];
-      return f.includes("PARTNERED") ? "partnered"
-           : f.includes("VERIFIED") ? "verified"
-           : f.includes("COMMUNITY") ? "community" : "";
-    }
-
-    async function resolveServer(s) {
-      if (!s.invite) return s;
-      try {
-        const r = await fetch("https://discord.com/api/v10/invites/" + encodeURIComponent(s.invite) + "?with_counts=true");
-        if (!r.ok) throw new Error("invite lookup failed");
-        const d = await r.json();
-        const g = d.guild || {};
-        return {
-          name: s.name || g.name || "Server",
-          icon: s.icon || (g.icon ? `https://cdn.discordapp.com/icons/${g.id}/${g.icon}.${g.icon.startsWith("a_") ? "gif" : "png"}?size=128` : ""),
-          members: d.approximate_member_count ?? s.members ?? 0,
-          badge: s.badge ?? badgeFor(g.features),
-        };
-      } catch (e) {
-        return s.name ? s : null;   // fall back to manual fields if you gave them
-      }
-    }
-
-    async function loadBotStats() {
-      try {
-        const r = await fetch(STATS_URL + "?t=" + Date.now(), { cache: "no-store" });
-        return r.ok ? await r.json() : null;
-      } catch (e) { return null; }
-    }
-
-    async function loadStats() {
-      const [listed, bot] = await Promise.all([
-        Promise.all(SERVERS.map(resolveServer)),
-        loadBotStats(),
-      ]);
-      // Hand-listed servers first, then everything the bot reports (no duplicates by name)
-      const seen = new Set();
-      const servers = [...listed.filter(Boolean), ...((bot && Array.isArray(bot.servers)) ? bot.servers : [])]
-        .filter(s => { const k = String(s.name).toLowerCase(); if (seen.has(k)) return false; seen.add(k); return true; })
-        .sort((a, b) => (b.members || 0) - (a.members || 0));
-      const marquee = document.querySelector(".marquee");
-      const track = document.getElementById("marquee-track");
-
-      const sum = servers.reduce((n, s) => n + (s.members || 0), 0);
-      const users = TOTALS ? TOTALS.users : (bot ? bot.users : sum);
-      const communities = TOTALS ? TOTALS.communities : (bot ? bot.communities : servers.length);
-      document.getElementById("stat-users").textContent = fmt(users);
-      document.getElementById("stat-communities").textContent = fmt(communities);
-
-      // Only rebuild the scrolling row when the list actually changed
-      const key = JSON.stringify(servers);
-      if (key !== lastKey) {
-        lastKey = key;
-        track.innerHTML = "";
-        if (servers.length) {
-          // Repeat the list (an even number of copies) so the loop is seamless
-          const k = Math.max(1, Math.ceil(1100 / (servers.length * 270)));
-          for (let i = 0; i < k * 2; i++) servers.forEach(s => track.appendChild(buildServer(s)));
-          track.style.animationDuration = Math.max(20, k * servers.length * 6) + "s";
-        }
-      }
-      marquee.hidden = !servers.length;
-      document.getElementById("stats").hidden = !servers.length && !TOTALS;
-    }
-
-    loadStats();
-    setInterval(loadStats, 60000);
 
     // Particles
     for (let i = 0; i < 35; i++) {
