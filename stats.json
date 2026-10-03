@@ -1,11 +1,11 @@
 {
-  "users": 8439,
+  "users": 8539,
   "communities": 9,
   "servers": [
     {
       "name": "sillys",
       "icon": "https://cdn.discordapp.com/icons/1464801984426021152/afe2ced793559fd9c1915c81d3d3803d.png?size=128",
-      "members": 3641
+      "members": 3640
     },
     {
       "name": "Neegy",
