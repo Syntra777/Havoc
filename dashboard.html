@@ -9,256 +9,347 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--text:#eaf1ff;--dim:#8494b3;--line:rgba(90,145,255,.14);--card:linear-gradient(145deg,rgba(18,31,58,.62),rgba(5,10,21,.78));--blue:#1468ff}
+:root{--text:#eaf1ff;--dim:#8494b3;--line:rgba(90,145,255,.14);--card:linear-gradient(145deg,rgba(18,31,58,.62),rgba(5,10,21,.78));--blue:#1468ff;--field:rgba(3,6,13,.7)}
 body{font-family:"Inter",sans-serif;background:radial-gradient(circle at 50% -10%,rgba(30,100,255,.18),transparent 35%),#03060d;color:var(--text);min-height:100vh}
-nav{position:fixed;top:0;left:0;right:0;height:74px;display:flex;align-items:center;justify-content:space-between;padding:0 7%;background:rgba(3,6,13,.58);backdrop-filter:blur(18px);border-bottom:1px solid rgba(90,140,255,.08);z-index:10}
+nav.top{position:fixed;top:0;left:0;right:0;height:74px;display:flex;align-items:center;justify-content:space-between;padding:0 7%;background:rgba(3,6,13,.7);backdrop-filter:blur(18px);border-bottom:1px solid rgba(90,140,255,.08);z-index:20}
 a.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit;font-weight:800;letter-spacing:-.5px;font-size:20px}
 a.brand img{width:34px;height:34px;object-fit:contain}
-.nav-links{display:flex;align-items:center;gap:26px}
-.nav-links a,.nav-links button.link{color:var(--dim);text-decoration:none;font-size:14px;background:none;border:0;font-family:inherit;cursor:pointer}
-.nav-links a:hover,.nav-links button.link:hover{color:#fff}
-main{width:min(900px,90%);margin:0 auto;padding:130px 0 120px}
-h1{font-size:clamp(28px,5vw,40px);letter-spacing:-1.5px;font-weight:800;margin-bottom:6px}
-h2{font-size:17px;margin-bottom:14px}
-.sub{color:var(--dim);font-size:14px;line-height:1.7;margin-bottom:30px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px;margin-bottom:18px}
-label.f{display:block;color:var(--dim);font-size:13px;margin:14px 0 6px}
-input,select,textarea,button{font:inherit;color:var(--text)}
-input[type=text],input[type=number],select,textarea{width:100%;background:rgba(3,6,13,.7);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px}
-textarea{min-height:70px;resize:vertical}
-:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
-.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 22px;border-radius:999px;text-decoration:none;font-size:14px;font-weight:700;color:#fff;cursor:pointer;border:1px solid rgba(120,170,255,.35);background:linear-gradient(135deg,#1468ff,#0633a9);box-shadow:0 0 24px rgba(20,104,255,.35)}
-.btn.ghost{background:rgba(30,90,190,.08);border-color:rgba(90,145,255,.25);box-shadow:none}
-.btn.small{padding:7px 14px;font-size:13px}
+.links{display:flex;align-items:center;gap:26px}
+.links a,.links button{color:var(--dim);text-decoration:none;font-size:14px;background:none;border:0;font:inherit;font-size:14px;cursor:pointer}
+.links a:hover,.links button:hover{color:#fff}
+h1{font-size:clamp(26px,4vw,34px);letter-spacing:-1.2px;font-weight:800}
+h2{font-size:16px;font-weight:600;margin-bottom:4px}
+.sub{color:var(--dim);font-size:14px;line-height:1.7}
 .hidden{display:none!important}
-.servers{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
-.srv{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
-.srv .ico{width:44px;height:44px;border-radius:12px;background:#12203d;display:grid;place-items:center;font-weight:700;object-fit:cover;flex:none}
-.srv b{flex:1;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tabs{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
-.tabs button{background:none;border:1px solid var(--line);border-radius:999px;padding:8px 18px;font-size:14px;color:var(--dim);cursor:pointer}
-.tabs button.on{background:rgba(30,90,190,.18);color:#fff;border-color:rgba(90,145,255,.4)}
-.chk{display:flex;align-items:center;gap:12px;padding:8px 0;font-size:14px}
-.chk input{width:18px;height:18px;accent-color:var(--blue);flex:none}
-.cmd{display:flex;align-items:center;gap:14px;padding:10px 0;border-top:1px solid rgba(90,145,255,.08)}
-.cmd:first-of-type{border-top:0}
-.cmd input{width:18px;height:18px;accent-color:var(--blue);flex:none}
-.cmd b{font-size:14px;min-width:110px}
-.cmd span{color:var(--dim);font-size:13px}
-.cat{color:#77aaff;font-size:13px;font-weight:600;margin:20px 0 4px}
-.cat:first-child{margin-top:0}
-.rule{display:grid;grid-template-columns:90px 1fr 1fr auto;gap:8px;margin-bottom:8px}
-.trig{display:grid;grid-template-columns:1fr 130px auto;gap:8px;margin-bottom:8px}
+input,select,textarea,button{font:inherit;color:var(--text)}
+input[type=text],input[type=number],select,textarea{width:100%;background:var(--field);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px}
+textarea{min-height:76px;resize:vertical}
+select option{background:#0b1226}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 24px;border-radius:999px;text-decoration:none;font-size:14px;font-weight:700;color:#fff;cursor:pointer;border:1px solid rgba(120,170,255,.35);background:linear-gradient(135deg,#1468ff,#0633a9);box-shadow:0 0 24px rgba(20,104,255,.35)}
+.btn.ghost{background:rgba(30,90,190,.08);border-color:rgba(90,145,255,.25);box-shadow:none}
+.btn.sm{padding:8px 16px;font-size:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;margin-bottom:16px}
+.center{width:min(520px,90%);margin:0 auto;padding:170px 0 80px;text-align:center}
+.center .sub{margin:10px 0 26px}
+.wrap{width:min(1000px,92%);margin:0 auto;padding:130px 0 100px}
+.head{margin-bottom:26px}
+.sgrid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.sc{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px 18px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;transition:border-color .2s,transform .2s}
+.sc:hover{border-color:rgba(70,135,255,.4);transform:translateY(-2px)}
+.ico{width:64px;height:64px;border-radius:18px;background:#12203d;display:grid;place-items:center;font-weight:700;font-size:22px;object-fit:cover;flex:none}
+.sc b{font-size:15px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.app{display:grid;grid-template-columns:250px 1fr;gap:30px;width:min(1180px,94%);margin:0 auto;padding:104px 0 130px}
+.side{position:sticky;top:98px;align-self:start}
+.srvhead{display:flex;align-items:center;gap:12px;padding:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:18px}
+.srvhead .ico{width:42px;height:42px;border-radius:12px;font-size:16px}
+.srvhead b{font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+.srvhead small{color:var(--dim);font-size:12px}
+.grp{color:#5f6f8f;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin:18px 12px 6px}
+.side button.nv{display:block;width:100%;text-align:left;background:none;border:0;border-radius:10px;padding:10px 12px;font-size:14px;color:var(--dim);cursor:pointer;font-weight:500}
+.side button.nv:hover{background:rgba(30,90,190,.1);color:#fff}
+.side button.nv.on{background:rgba(30,90,190,.2);color:#fff}
+.side .back{margin-top:18px;width:100%}
+.pg h1{margin-bottom:6px}
+.pg .sub{margin-bottom:24px}
+.mods{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.mod{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;text-align:left;cursor:pointer;transition:border-color .2s}
+.mod:hover{border-color:rgba(70,135,255,.4)}
+.mod b{display:block;font-size:15px;margin-bottom:4px}
+.mod span.d{display:block;color:var(--dim);font-size:13px;line-height:1.6;margin-bottom:14px}
+.pill{display:inline-block;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:rgba(132,148,179,.12);color:var(--dim)}
+.pill.on{background:rgba(20,104,255,.18);color:#77aaff}
+.opt{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:14px 0;border-top:1px solid rgba(90,145,255,.08)}
+.opt:first-of-type{border-top:0;padding-top:4px}
+.opt b{font-size:14px;font-weight:600;display:block}
+.opt small{color:var(--dim);font-size:13px;line-height:1.5;display:block;margin-top:2px}
+.sw{position:relative;width:44px;height:25px;flex:none}
+.sw input{position:absolute;inset:0;opacity:0;cursor:pointer;margin:0;z-index:1;width:100%;height:100%}
+.sw i{position:absolute;inset:0;border-radius:99px;background:#1b2745;transition:.2s}
+.sw i::after{content:"";position:absolute;left:3px;top:3px;width:19px;height:19px;border-radius:50%;background:#8494b3;transition:.2s}
+.sw input:checked+i{background:var(--blue)}
+.sw input:checked+i::after{transform:translateX(19px);background:#fff}
+.sw input:focus-visible+i{outline:2px solid #fff;outline-offset:2px}
+label.f{display:block;color:var(--dim);font-size:13px;margin:16px 0 6px}
+label.f:first-of-type{margin-top:8px}
+.prev{margin-top:10px;padding:12px 14px;border-radius:10px;background:rgba(3,6,13,.7);border-left:3px solid var(--blue);font-size:14px;color:#c9d6f0;white-space:pre-wrap}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.tools input{flex:1;min-width:180px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.chips button{background:none;border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:13px;color:var(--dim);cursor:pointer}
+.chips button.on{background:rgba(30,90,190,.2);color:#fff;border-color:rgba(90,145,255,.4)}
+.cmds{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.cmd{display:flex;align-items:center;justify-content:space-between;gap:14px;background:rgba(3,6,13,.45);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.cmd b{font-size:14px;display:block}
+.cmd small{color:var(--dim);font-size:12px;line-height:1.4;display:block;margin-top:2px}
+.rule{display:grid;grid-template-columns:100px 1fr 1fr auto;gap:8px;margin-bottom:8px}
+.trig{display:grid;grid-template-columns:1fr 150px auto;gap:8px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(90,145,255,.08)}
 .trig textarea{grid-column:1/3;min-height:56px}
-.bar{position:fixed;bottom:0;left:0;right:0;padding:14px 7%;background:rgba(3,6,13,.8);backdrop-filter:blur(18px);border-top:1px solid rgba(90,140,255,.08);display:flex;gap:14px;align-items:center;justify-content:center}
-#msg{color:var(--dim);font-size:14px}
-@media(max-width:700px){nav{padding:0 5%}.rule{grid-template-columns:1fr 1fr}.trig{grid-template-columns:1fr}.trig textarea{grid-column:auto}}
+.dirty{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);display:flex;align-items:center;gap:14px;padding:10px 12px 10px 20px;border-radius:999px;background:rgba(10,18,38,.95);border:1px solid rgba(90,145,255,.3);box-shadow:0 10px 40px rgba(0,0,0,.5);z-index:30;font-size:14px;white-space:nowrap}
+.err{color:#ff8e8e;font-size:13px;margin-top:14px}
+@media(max-width:860px){
+  nav.top{padding:0 5%}
+  .app{grid-template-columns:1fr;gap:16px}
+  .side{position:static}
+  .grp{display:none}
+  .navs{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px}
+  .side button.nv{width:auto;white-space:nowrap;border:1px solid var(--line);border-radius:999px}
+  .rule{grid-template-columns:1fr 1fr}.trig{grid-template-columns:1fr}.trig textarea{grid-column:auto}
+  .dirty{width:92%;justify-content:space-between;white-space:normal}
+}
 </style>
 </head>
 <body>
-<nav>
+<nav class="top">
   <a class="brand" href="index.html"><img src="havoc-logo.png" alt="Havoc">HAVOC</a>
-  <div class="nav-links">
-    <a href="index.html">Home</a>
-    <a href="terms.html">Terms</a>
-    <a href="privacy.html">Privacy</a>
-    <button class="link hidden" id="logout" type="button">Log out</button>
+  <div class="links">
+    <a href="index.html">Home</a><a href="terms.html">Terms</a><a href="privacy.html">Privacy</a>
+    <button id="logout" class="hidden" type="button">Log out</button>
   </div>
 </nav>
 
-<main>
-  <section id="v-login" class="hidden">
-    <h1>Dashboard</h1>
-    <p class="sub">Log in with Discord to manage Havoc in the servers you own or manage.</p>
-    <a class="btn" id="login">Log in with Discord</a>
-  </section>
+<section id="v-load" class="center"><p class="sub">Loading...</p></section>
 
-  <section id="v-servers" class="hidden">
-    <h1>Your servers</h1>
-    <p class="sub" id="hello"></p>
-    <div class="servers" id="servers"></div>
-  </section>
+<section id="v-login" class="center hidden">
+  <h1>Havoc dashboard</h1>
+  <p class="sub">Log in with Discord to manage Havoc in the servers you own or manage.</p>
+  <a class="btn" id="login">Log in with Discord</a>
+</section>
 
-  <section id="v-config" class="hidden">
-    <button class="btn ghost small" id="back" type="button">Back to servers</button>
-    <h1 style="margin-top:18px" id="gname"></h1>
-    <p class="sub">Changes apply to this server only, after you save.</p>
-    <div class="tabs" id="tabs">
-      <button data-t="general" class="on" type="button">General</button>
-      <button data-t="commands" type="button">Commands</button>
-      <button data-t="warnings" type="button">Warnings</button>
-      <button data-t="triggers" type="button">Triggers</button>
+<section id="v-error" class="center hidden">
+  <h1>Can't reach Havoc</h1>
+  <p class="sub" id="errtext">The dashboard couldn't connect to the bot. This is usually temporary.</p>
+  <button class="btn" id="retry" type="button">Try again</button>
+</section>
+
+<section id="v-servers" class="wrap hidden">
+  <div class="head"><h1>Select a server</h1><p class="sub" id="hello"></p></div>
+  <div class="sgrid" id="servers"></div>
+</section>
+
+<section id="v-config" class="app hidden">
+  <aside class="side">
+    <div class="srvhead"><span id="sico"></span><div style="min-width:0"><b id="sname"></b><small>Server settings</small></div></div>
+    <div class="navs" id="nav"></div>
+    <button class="btn ghost sm back" id="back" type="button">All servers</button>
+  </aside>
+
+  <div id="main">
+    <div class="pg" id="p-overview">
+      <h1>Overview</h1><p class="sub">Everything here applies to this server only.</p>
+      <div class="mods" id="mods"></div>
     </div>
 
-    <div id="t-general">
-      <div class="card"><h2>Logging</h2>
-        <label class="f" for="log_channel">Default log channel</label><select id="log_channel"></select></div>
-      <div class="card"><h2>Protection</h2><div id="toggles"></div>
-        <label class="f" for="minage">Kick accounts younger than this many days (0 turns it off)</label>
-        <input type="number" id="minage" min="0" max="365"></div>
-      <div class="card"><h2>New members</h2>
-        <label class="f" for="autorole">Role given on join</label><select id="autorole"></select>
-        <label class="f" for="welcome_channel">Welcome channel</label><select id="welcome_channel"></select>
-        <label class="f" for="welcome_msg">Welcome message. Variables: {user} {name} {server} {count}</label>
-        <textarea id="welcome_msg"></textarea></div>
+    <div class="pg hidden" id="p-protection">
+      <h1>Protection</h1><p class="sub">Keep the server safe from spam, raids and nukes.</p>
+      <div class="card" id="toggles"></div>
+      <div class="card"><h2>Minimum account age</h2><p class="sub">Kick new members whose account is younger than this many days. Use 0 to turn it off.</p>
+        <label class="f" for="minage">Days</label><input type="number" id="minage" min="0" max="365"></div>
     </div>
 
-    <div id="t-commands" class="hidden">
-      <div class="card"><h2>Commands</h2>
-        <p class="sub" style="margin-bottom:14px">Turn off any command you don't want used in this server. Disabled commands stop working as both slash and prefix commands.</p>
-        <input type="text" id="cmdsearch" placeholder="Search commands" aria-label="Search commands">
-        <div id="cmds" style="margin-top:8px"></div></div>
+    <div class="pg hidden" id="p-warnings">
+      <h1>Warning actions</h1><p class="sub">What happens automatically when a member reaches a number of warnings.</p>
+      <div class="card"><div id="rules"></div><button class="btn ghost sm" id="addrule" type="button">Add rule</button></div>
     </div>
 
-    <div id="t-warnings" class="hidden">
-      <div class="card"><h2>Warning actions</h2>
-        <p class="sub" style="margin-bottom:14px">What happens automatically when a member reaches a number of warnings.</p>
-        <div id="rules"></div><button class="btn ghost small" id="addrule" type="button">Add rule</button></div>
+    <div class="pg hidden" id="p-logging">
+      <h1>Logging</h1><p class="sub">Choose where Havoc posts moderation actions and server events.</p>
+      <div class="card"><label class="f" for="log_channel">Default log channel</label><select id="log_channel"></select>
+        <p class="sub" style="margin-top:12px">Per-category channels can be set in Discord with the logsconfig command.</p></div>
     </div>
 
-    <div id="t-triggers" class="hidden">
-      <div class="card"><h2>Triggers</h2>
-        <p class="sub" style="margin-bottom:14px">When a message matches a phrase, Havoc replies automatically. Replies can use {user} {name} {server} {count}. Each trigger fires at most once every 5 seconds per channel.</p>
-        <div id="trigs"></div><button class="btn ghost small" id="addtrig" type="button">Add trigger</button></div>
+    <div class="pg hidden" id="p-welcome">
+      <h1>Welcome and roles</h1><p class="sub">Greet new members and give them a role automatically.</p>
+      <div class="card"><h2>Autorole</h2>
+        <label class="f" for="autorole">Role given on join</label><select id="autorole"></select></div>
+      <div class="card"><h2>Welcome message</h2>
+        <label class="f" for="welcome_channel">Channel</label><select id="welcome_channel"></select>
+        <label class="f" for="welcome_msg">Message. Variables: {user} {name} {server} {count}</label>
+        <textarea id="welcome_msg"></textarea>
+        <div class="prev" id="wprev"></div></div>
     </div>
 
-    <div class="bar"><button class="btn" id="save" type="button">Save changes</button><span id="msg"></span></div>
-  </section>
-</main>
+    <div class="pg hidden" id="p-commands">
+      <h1>Commands</h1><p class="sub">Turn off any command you don't want used here. Disabled commands stop working as both slash and prefix commands.</p>
+      <div class="tools"><input type="text" id="cmdsearch" placeholder="Search commands" aria-label="Search commands"></div>
+      <div class="chips" id="chips"></div>
+      <div class="cmds" id="cmds"></div>
+    </div>
+
+    <div class="pg hidden" id="p-triggers">
+      <h1>Triggers</h1><p class="sub">When a message matches a phrase, Havoc replies automatically. Replies can use {user} {name} {server} {count}. Each trigger fires at most once every 5 seconds per channel.</p>
+      <div class="card"><div id="trigs"></div><button class="btn ghost sm" id="addtrig" type="button">Add trigger</button></div>
+    </div>
+  </div>
+</section>
+
+<div class="dirty hidden" id="dirty"><span id="dmsg">You have unsaved changes</span>
+  <span><button class="btn ghost sm" id="reset" type="button">Reset</button> <button class="btn sm" id="save" type="button">Save changes</button></span></div>
 
 <script>
 const API = "https://api.havoc.website";
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const TOGGLES = [["antinuke","Anti-nuke"],["raidmode","Raid mode"],["automod_spam","Block spam"],["automod_links","Block links"],
-  ["automod_invites","Block invites"],["automod_caps","Block excessive caps"],["automod_mentions","Block mass mentions"]];
-let gid = null, cfg = null;
+const PROT = [
+  ["antinuke","Anti-nuke","Bans members who mass delete channels or roles, or mass ban and kick."],
+  ["raidmode","Raid mode","Kicks every new member that joins. It also turns on by itself during join floods."],
+  ["automod_spam","Block spam","Deletes message floods and times the sender out."],
+  ["automod_links","Block links","Deletes messages that contain links."],
+  ["automod_invites","Block invites","Deletes Discord invite links."],
+  ["automod_caps","Block excessive caps","Deletes long messages written mostly in capitals."],
+  ["automod_mentions","Block mass mentions","Deletes messages that mention five or more people or roles."]];
+const PAGES = [["overview","Overview"],null,["protection","Protection"],["warnings","Warning actions"],["logging","Logging"],
+  ["welcome","Welcome and roles"],["commands","Commands"],["triggers","Triggers"]];
+let gid = null, gname = "", gicon = "", cfg = null, page = "overview", catf = "all";
 
 async function api(path, opts = {}) {
-  const r = await fetch(API + "/api" + path, { credentials: "include", ...opts });
-  if (r.status === 401) { view("login"); throw new Error("login"); }
-  if (!r.ok) throw new Error(r.status);
+  let r;
+  try { r = await fetch(API + "/api" + path, { credentials: "include", ...opts }); }
+  catch (e) { const err = new Error("network"); err.kind = "network"; throw err; }
+  if (r.status === 401) { const err = new Error("login"); err.kind = "login"; throw err; }
+  if (!r.ok) { const err = new Error(r.status); err.kind = "http"; throw err; }
   return r.json();
 }
 function view(v) {
-  ["login", "servers", "config"].forEach(n => $("v-" + n).classList.toggle("hidden", n !== v));
-  $("logout").classList.toggle("hidden", v === "login");
+  ["load", "login", "error", "servers", "config"].forEach(n => $("v-" + n).classList.toggle("hidden", n !== v));
+  $("logout").classList.toggle("hidden", v === "login" || v === "load" || v === "error");
 }
-function fill(sel, items, cur, empty) {
-  sel.innerHTML = `<option value="">${empty}</option>` + items.map(i => `<option value="${i.id}">${esc(i.name)}</option>`).join("");
-  sel.value = cur || "";
+function fail(e) {
+  if (e.kind === "login") return view("login");
+  $("errtext").textContent = e.kind === "network"
+    ? "The dashboard couldn't connect to the bot. The bot may be offline or restarting."
+    : `The bot returned an error (${e.message}). Try again in a moment.`;
+  view("error");
 }
+const iconHtml = (url, name, cls = "ico") => url ? `<img class="${cls}" src="${url}" alt="">` : `<span class="${cls}">${esc((name || "?")[0])}</span>`;
+const sw = (attrs, on) => `<label class="sw"><input type="checkbox" ${attrs} ${on ? "checked" : ""}><i></i></label>`;
+const dirty = on => { $("dirty").classList.toggle("hidden", !on); $("dmsg").textContent = "You have unsaved changes"; };
 
 async function init() {
+  view("load");
   $("login").href = API + "/api/login";
   try {
     const me = await api("/me");
-    $("hello").textContent = me.guilds.length ? `Logged in as ${me.name}. Pick a server to configure.`
-      : "No servers found. You need to own the server or have the Manage Server permission.";
-    $("servers").innerHTML = me.guilds.map(g => `<div class="srv">
-      ${g.icon ? `<img class="ico" src="${g.icon}" alt="">` : `<span class="ico">${esc(g.name[0])}</span>`}
-      <b>${esc(g.name)}</b>
-      ${g.has_bot ? `<button class="btn small" data-id="${g.id}" data-name="${esc(g.name)}" type="button">Configure</button>`
-                  : `<a class="btn ghost small" href="${g.invite}" target="_blank" rel="noopener noreferrer">Add bot</a>`}</div>`).join("");
+    $("hello").textContent = me.guilds.length ? `Logged in as ${me.name}.`
+      : "No servers found. You need to own a server or have the Manage Server permission.";
+    $("servers").innerHTML = me.guilds.map(g => `<div class="sc">${iconHtml(g.icon, g.name)}<b>${esc(g.name)}</b>
+      ${g.has_bot ? `<button class="btn sm" data-id="${g.id}" data-name="${esc(g.name)}" data-icon="${g.icon}" type="button">Configure</button>`
+                  : `<a class="btn ghost sm" href="${g.invite}" target="_blank" rel="noopener noreferrer">Add Havoc</a>`}</div>`).join("");
     view("servers");
-  } catch (e) {}
+  } catch (e) { fail(e); }
 }
 
-async function openGuild(id, name) {
-  gid = id;
-  cfg = await api(`/guilds/${id}/config`);
-  $("gname").textContent = name;
+async function openGuild(id, name, icon) {
+  gid = id; gname = name; gicon = icon;
+  try { cfg = await api(`/guilds/${id}/config`); } catch (e) { return fail(e); }
+  $("sname").textContent = name;
+  $("sico").innerHTML = iconHtml(icon, name);
   const s = cfg.settings;
+  const fill = (el, items, cur, empty) => { el.innerHTML = `<option value="">${empty}</option>` + items.map(i => `<option value="${i.id}">${esc(i.name)}</option>`).join(""); el.value = cur || ""; };
   fill($("log_channel"), cfg.channels, s.log_channel, "Not set");
   fill($("welcome_channel"), cfg.channels, s.welcome_channel, "Off");
   fill($("autorole"), cfg.roles, s.autorole, "Off");
   $("welcome_msg").value = s.welcome_msg || "";
   $("minage").value = s.minage || 0;
-  $("toggles").innerHTML = TOGGLES.map(([k, n]) =>
-    `<label class="chk"><input type="checkbox" data-k="${k}" ${s[k] === "1" ? "checked" : ""}>${n}</label>`).join("");
-  $("rules").innerHTML = "";
-  Object.entries(cfg.punish).sort((a, b) => a[0] - b[0]).forEach(([n, v]) => { const [a, d] = v.split("|"); addRule(n, a, d); });
-  $("trigs").innerHTML = "";
-  cfg.triggers.forEach(t => addTrig(t));
-  renderCmds();
-  tab("general");
-  $("msg").textContent = "";
-  view("config");
+  $("toggles").innerHTML = PROT.map(([k, n, d]) => `<div class="opt"><div><b>${n}</b><small>${d}</small></div>${sw(`data-k="${k}"`, s[k] === "1")}</div>`).join("");
+  $("rules").innerHTML = ""; Object.entries(cfg.punish).sort((a, b) => a[0] - b[0]).forEach(([n, v]) => { const [a, d] = v.split("|"); addRule(n, a, d); });
+  $("trigs").innerHTML = ""; cfg.triggers.forEach(addTrig);
+  $("nav").innerHTML = PAGES.map(p => p ? `<button class="nv" data-p="${p[0]}" type="button">${p[1]}</button>` : `<div class="grp">Settings</div>`).join("");
+  $("chips").innerHTML = ["all", ...cfg.categories].map(c => `<button data-cat="${c}" type="button">${c}</button>`).join("");
+  catf = "all"; $("cmdsearch").value = "";
+  renderCmds(); preview(); dirty(false); go("overview"); view("config");
+}
+
+function go(p) {
+  page = p;
+  PAGES.forEach(x => x && $("p-" + x[0]).classList.toggle("hidden", x[0] !== p));
+  document.querySelectorAll("#nav .nv").forEach(b => b.classList.toggle("on", b.dataset.p === p));
+  if (p === "overview") overview();
+  window.scrollTo(0, 0);
+}
+
+function overview() {
+  const on = [...document.querySelectorAll("#toggles input")].filter(c => c.checked).length;
+  const rules = document.querySelectorAll(".rule").length, trigs = document.querySelectorAll(".trig").length;
+  const off = cfg.commands.filter(c => !c.enabled).length;
+  const lc = $("log_channel"), lname = lc.value ? lc.options[lc.selectedIndex].text : null;
+  const wel = $("welcome_channel").value;
+  const m = [
+    ["protection", "Protection", "AutoMod, anti-nuke and raid mode.", `${on} of ${PROT.length} on`, on > 0],
+    ["warnings", "Warning actions", "Automatic punishments at warning counts.", rules ? `${rules} rule${rules > 1 ? "s" : ""}` : "No rules", rules > 0],
+    ["logging", "Logging", "Where moderation and server events are posted.", lname ? "#" + lname : "Not set", !!lname],
+    ["welcome", "Welcome and roles", "Welcome message and autorole for new members.", wel ? "Welcome on" : "Welcome off", !!wel],
+    ["commands", "Commands", "Choose which commands members can use.", off ? `${off} disabled` : "All enabled", off === 0],
+    ["triggers", "Triggers", "Automatic replies to phrases.", trigs ? `${trigs} trigger${trigs > 1 ? "s" : ""}` : "None yet", trigs > 0]];
+  $("mods").innerHTML = m.map(([p, t, d, st, o]) => `<button class="mod" data-p="${p}" type="button"><b>${t}</b><span class="d">${d}</span><span class="pill ${o ? "on" : ""}">${st}</span></button>`).join("");
 }
 
 function renderCmds() {
   const q = $("cmdsearch").value.trim().toLowerCase();
-  let html = "";
-  cfg.categories.forEach(cat => {
-    const list = cfg.commands.filter(c => c.category === cat && (!q || c.name.includes(q) || c.description.toLowerCase().includes(q)));
-    if (!list.length) return;
-    html += `<div class="cat">${cat}</div>` + list.map(c =>
-      `<label class="cmd"><input type="checkbox" data-c="${c.name}" ${c.enabled ? "checked" : ""}><b>${c.name}</b><span>${esc(c.description)}</span></label>`).join("");
-  });
-  $("cmds").innerHTML = html || `<p class="sub">No commands match.</p>`;
+  document.querySelectorAll("#chips button").forEach(b => b.classList.toggle("on", b.dataset.cat === catf));
+  const list = cfg.commands.filter(c => (catf === "all" || c.category === catf) && (!q || c.name.includes(q) || c.description.toLowerCase().includes(q)));
+  $("cmds").innerHTML = list.map(c => `<div class="cmd"><div><b>${c.name}</b><small>${esc(c.description)}</small></div>${sw(`data-c="${c.name}"`, c.enabled)}</div>`).join("")
+    || `<p class="sub">No commands match.</p>`;
 }
 
 function addRule(n = "", action = "timeout", dur = "1h") {
-  const d = document.createElement("div");
-  d.className = "rule";
+  const d = document.createElement("div"); d.className = "rule";
   d.innerHTML = `<input type="number" min="1" placeholder="Warns" value="${n}" aria-label="Warning count">
     <select aria-label="Action"><option>timeout</option><option>kick</option><option>ban</option></select>
     <input type="text" placeholder="Duration, e.g. 1h" value="${esc(dur || "")}" aria-label="Timeout duration">
-    <button class="btn ghost small" type="button">Remove</button>`;
+    <button class="btn ghost sm" type="button">Remove</button>`;
   d.querySelector("select").value = action;
-  d.querySelector("button").onclick = () => d.remove();
+  d.querySelector("button").onclick = () => { d.remove(); dirty(true); };
   $("rules").appendChild(d);
 }
-
 function addTrig(t = { phrase: "", response: "", match: "contains" }) {
   if (document.querySelectorAll(".trig").length >= 50) return;
-  const d = document.createElement("div");
-  d.className = "trig";
+  const d = document.createElement("div"); d.className = "trig";
   d.innerHTML = `<input type="text" placeholder="When a message matches" value="${esc(t.phrase)}" maxlength="100" aria-label="Trigger phrase">
     <select aria-label="Match type"><option value="contains">contains</option><option value="exact">is exactly</option><option value="starts">starts with</option></select>
-    <button class="btn ghost small" type="button">Remove</button>
+    <button class="btn ghost sm" type="button">Remove</button>
     <textarea placeholder="Havoc replies with" maxlength="1000" aria-label="Reply">${esc(t.response)}</textarea>`;
   d.querySelector("select").value = t.match;
-  d.querySelector("button").onclick = () => d.remove();
+  d.querySelector("button").onclick = () => { d.remove(); dirty(true); };
   $("trigs").appendChild(d);
 }
-
-function tab(t) {
-  document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("on", b.dataset.t === t));
-  ["general", "commands", "warnings", "triggers"].forEach(n => $("t-" + n).classList.toggle("hidden", n !== t));
+function preview() {
+  const m = $("welcome_msg").value || "";
+  $("wprev").textContent = m ? m.replaceAll("{user}", "@newmember").replaceAll("{name}", "newmember").replaceAll("{server}", gname).replaceAll("{count}", "1,234") : "Your message preview appears here.";
 }
 
 async function save() {
-  const settings = {
-    log_channel: $("log_channel").value, welcome_channel: $("welcome_channel").value, autorole: $("autorole").value,
-    welcome_msg: $("welcome_msg").value, minage: String(Math.max(0, +$("minage").value || 0)),
-  };
+  const settings = { log_channel: $("log_channel").value, welcome_channel: $("welcome_channel").value, autorole: $("autorole").value,
+    welcome_msg: $("welcome_msg").value, minage: String(Math.max(0, +$("minage").value || 0)) };
   document.querySelectorAll("#toggles input").forEach(c => settings[c.dataset.k] = c.checked ? "1" : "0");
   const punish = {};
-  document.querySelectorAll(".rule").forEach(r => {
-    const [n, a, d] = r.querySelectorAll("input,select");
-    if (n.value) punish[n.value] = a.value + "|" + (d.value || "1h");
-  });
-  const triggers = [...document.querySelectorAll(".trig")].map(t => ({
-    phrase: t.querySelector("input").value, match: t.querySelector("select").value, response: t.querySelector("textarea").value }));
+  document.querySelectorAll(".rule").forEach(r => { const [n, a, d] = r.querySelectorAll("input,select"); if (n.value) punish[n.value] = a.value + "|" + (d.value || "1h"); });
+  const triggers = [...document.querySelectorAll(".trig")].map(t => ({ phrase: t.querySelector("input").value, match: t.querySelector("select").value, response: t.querySelector("textarea").value }));
   const disabled = cfg.commands.filter(c => !c.enabled).map(c => c.name);
-  $("msg").textContent = "Saving...";
+  $("dmsg").textContent = "Saving...";
   try {
-    await api(`/guilds/${gid}/config`, { method: "PUT", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ settings, punish, disabled, triggers }) });
-    $("msg").textContent = "Saved.";
-  } catch (e) { $("msg").textContent = "Could not save. Check your permissions and try again."; }
+    await api(`/guilds/${gid}/config`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ settings, punish, disabled, triggers }) });
+    $("dmsg").textContent = "Saved.";
+    setTimeout(() => dirty(false), 1200);
+    if (page === "overview") overview();
+  } catch (e) { $("dmsg").textContent = "Could not save. Check your permissions and try again."; }
 }
 
-$("servers").onclick = e => { const b = e.target.closest("button[data-id]"); if (b) openGuild(b.dataset.id, b.dataset.name); };
-$("cmds").onchange = e => { const c = cfg.commands.find(x => x.name === e.target.dataset.c); if (c) c.enabled = e.target.checked; };
+$("servers").onclick = e => { const b = e.target.closest("button[data-id]"); if (b) openGuild(b.dataset.id, b.dataset.name, b.dataset.icon); };
+$("nav").onclick = e => { const b = e.target.closest("[data-p]"); if (b) go(b.dataset.p); };
+$("mods").onclick = e => { const b = e.target.closest("[data-p]"); if (b) go(b.dataset.p); };
+$("chips").onclick = e => { if (e.target.dataset.cat) { catf = e.target.dataset.cat; renderCmds(); } };
 $("cmdsearch").oninput = renderCmds;
-$("tabs").onclick = e => { if (e.target.dataset.t) tab(e.target.dataset.t); };
-$("addrule").onclick = () => addRule();
-$("addtrig").onclick = () => addTrig();
+$("cmds").onchange = e => { const c = cfg.commands.find(x => x.name === e.target.dataset.c); if (c) c.enabled = e.target.checked; };
+$("main").addEventListener("input", e => { if (e.target.id !== "cmdsearch") dirty(true); if (e.target.id === "welcome_msg") preview(); });
+$("main").addEventListener("change", e => { if (e.target.id !== "cmdsearch") dirty(true); });
+$("addrule").onclick = () => { addRule(); dirty(true); };
+$("addtrig").onclick = () => { addTrig(); dirty(true); };
 $("save").onclick = save;
-$("back").onclick = () => init();
-$("logout").onclick = async () => { await fetch(API + "/api/logout", { method: "POST", credentials: "include" }); view("login"); };
+$("reset").onclick = () => openGuild(gid, gname, gicon);
+$("back").onclick = () => { dirty(false); init(); };
+$("retry").onclick = init;
+$("logout").onclick = async () => { try { await fetch(API + "/api/logout", { method: "POST", credentials: "include" }); } catch (e) {} dirty(false); view("login"); };
 init();
 </script>
 </body>
