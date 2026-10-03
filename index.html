@@ -153,6 +153,30 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* STATS + SERVER MARQUEE */
+    .stats { text-align: center; padding: 0 20px 70px; margin-top: -30px; }
+    .stats-line { color: #7f8ca5; font-size: 15px; }
+    .stats-line strong { color: #fff; font-weight: 700; }
+    .marquee {
+      margin-top: 34px; overflow: hidden;
+      mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    }
+    .marquee-track {
+      display: flex; gap: 56px; width: max-content;
+      animation: scroll 40s linear infinite;
+    }
+    .marquee:hover .marquee-track { animation-play-state: paused; }
+    @keyframes scroll { to { transform: translateX(calc(-50% - 28px)); } }
+    .srv { display: flex; align-items: center; gap: 14px; text-align: left; white-space: nowrap; }
+    .srv-icon {
+      width: 56px; height: 56px; border-radius: 50%; object-fit: cover; flex-shrink: 0;
+      background: linear-gradient(135deg, #1468ff, #0633a9);
+      display: grid; place-items: center; font-weight: 800; color: #fff;
+    }
+    .srv-name { font-weight: 700; font-size: 15px; color: #f4f7ff; }
+    .srv-members { font-size: 12px; color: #6f7f9c; margin-top: 3px; }
+
     /* SECTIONS */
     section.block { width: min(1100px, 90%); margin: 0 auto; padding: 90px 0 30px; }
     .section-head { text-align: center; margin-bottom: 50px; }
@@ -265,7 +289,7 @@
       <a href="#features">Features</a>
       <a href="terms.html">Terms</a>
       <a href="privacy.html">Privacy</a>
-      <a class="btn btn-primary nav-cta" href="https://discord.com/oauth2/authorize?client_id=YOUR_BOT_ID&scope=bot+applications.commands" target="_blank" rel="noopener noreferrer">Add to Discord</a>
+      <a class="btn btn-primary nav-cta" href="https://discord.com/oauth2/authorize?client_id=1555080465319202866&scope=bot+applications.commands" target="_blank" rel="noopener noreferrer">Add to Discord</a>
     </div>
   </nav>
 
@@ -278,9 +302,17 @@
       Built to keep your Discord server safe and running smoothly.
     </p>
     <div class="hero-actions">
-      <a class="btn btn-primary" href="https://discord.com/oauth2/authorize?client_id=YOUR_BOT_ID&scope=bot+applications.commands" target="_blank" rel="noopener noreferrer">Add to Discord</a>
+      <a class="btn btn-primary" href="https://discord.com/oauth2/authorize?client_id=1555080465319202866&scope=bot+applications.commands" target="_blank" rel="noopener noreferrer">Add to Discord</a>
       <a class="btn btn-ghost" href="https://discord.com/invite/invitehavoc" target="_blank" rel="noopener noreferrer">Join the Discord →</a>
     </div>
+  </section>
+
+  <section class="stats" id="stats" hidden>
+    <div class="stats-line">
+      Powering <strong id="stat-users">0</strong> users across
+      <strong id="stat-communities">0</strong> communities
+    </div>
+    <div class="marquee"><div class="marquee-track" id="marquee-track"></div></div>
   </section>
 
   <section class="block" id="features">
@@ -328,7 +360,7 @@
       <h2>Ready to protect your server?</h2>
       <p>Add Havoc in a few clicks, or join our Discord for updates and support.</p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="https://discord.com/oauth2/authorize?client_id=YOUR_BOT_ID&scope=bot+applications.commands" target="_blank" rel="noopener noreferrer">Add to Discord</a>
+        <a class="btn btn-primary" href="https://discord.com/oauth2/authorize?client_id=1555080465319202866&scope=bot+applications.commands" target="_blank" rel="noopener noreferrer">Add to Discord</a>
         <a class="btn btn-ghost" href="https://discord.com/invite/invitehavoc" target="_blank" rel="noopener noreferrer">Join the Discord →</a>
       </div>
     </div>
@@ -345,7 +377,7 @@
       <div>
         <h4>Product</h4>
         <a href="#features">Features</a>
-        <a href="https://discord.com/oauth2/authorize?client_id=YOUR_BOT_ID&scope=bot+applications.commands" target="_blank" rel="noopener noreferrer">Add to Discord</a>
+        <a href="https://discord.com/oauth2/authorize?client_id=1555080465319202866&scope=bot+applications.commands" target="_blank" rel="noopener noreferrer">Add to Discord</a>
       </div>
       <div>
         <h4>Support</h4>
@@ -378,6 +410,58 @@
       });
     }, { threshold: 0.12 });
     document.querySelectorAll(".feature, .cta").forEach(el => observer.observe(el));
+
+    // Live stats + server marquee
+    // Set this to your bot's API URL once it exists. Leave "" to keep the section hidden.
+    // Expected JSON: { "users": 0, "communities": 0,
+    //   "servers": [ { "name": "Server", "icon": "https://cdn.discordapp.com/...", "members": 0 } ] }
+    const API_URL = "";
+
+    (async () => {
+      if (!API_URL) return;
+      try {
+        const res = await fetch(API_URL);
+        if (!res.ok) return;
+        const data = await res.json();
+        const fmt = n => Number(n || 0).toLocaleString();
+        document.getElementById("stat-users").textContent = fmt(data.users);
+        document.getElementById("stat-communities").textContent = fmt(data.communities);
+
+        const servers = Array.isArray(data.servers) ? data.servers : [];
+        const track = document.getElementById("marquee-track");
+        const build = s => {
+          const item = document.createElement("div");
+          item.className = "srv";
+          const name = String(s.name || "Server");
+          const icon = String(s.icon || "");
+          let img;
+          if (icon.startsWith("https://cdn.discordapp.com/")) {
+            img = document.createElement("img");
+            img.src = icon; img.alt = ""; img.loading = "lazy";
+          } else {
+            img = document.createElement("div");
+            img.textContent = name.charAt(0).toUpperCase();
+          }
+          img.className = "srv-icon";
+          const text = document.createElement("div");
+          const n = document.createElement("div");
+          n.className = "srv-name"; n.textContent = name;
+          const m = document.createElement("div");
+          m.className = "srv-members"; m.textContent = fmt(s.members) + " members";
+          text.append(n, m);
+          item.append(img, text);
+          return item;
+        };
+        if (servers.length) {
+          // Duplicate the list so the loop is seamless
+          [...servers, ...servers].forEach(s => track.appendChild(build(s)));
+          track.style.animationDuration = Math.max(20, servers.length * 6) + "s";
+        } else {
+          track.parentElement.hidden = true;
+        }
+        document.getElementById("stats").hidden = false;
+      } catch (e) { /* leave the section hidden */ }
+    })();
 
     // Particles
     for (let i = 0; i < 35; i++) {
