@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#050914">
-  <title>Havoc</title>
+  <title>Havoc — Discord Security & Moderation Bot</title>
+  <meta name="description" content="Havoc is a Discord bot for moderation, anti-raid, anti-nuke, AutoMod, and logging.">
   <link rel="icon" href="havoc-logo.png">
 
   <style>
@@ -69,10 +70,30 @@
       to { transform: translateY(-10vh); opacity: 0; }
     }
 
+    /* BUTTONS */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 14px 28px; border-radius: 999px; text-decoration: none;
+      font-size: 15px; font-weight: 700; color: #fff;
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #1468ff, #0633a9);
+      border: 1px solid rgba(120,170,255,.35);
+      box-shadow: 0 0 28px rgba(20,104,255,.4), inset 0 0 12px rgba(255,255,255,.12);
+    }
+    .btn-ghost {
+      background: rgba(30,90,190,.08);
+      border: 1px solid rgba(90,145,255,.25);
+    }
+    .btn:hover, .btn:focus-visible { transform: translateY(-3px); outline: none; }
+    .btn-primary:hover { box-shadow: 0 0 42px rgba(40,125,255,.65), inset 0 0 12px rgba(255,255,255,.18); }
+    .btn-ghost:hover { border-color: rgba(120,170,255,.6); }
+
     /* NAVBAR */
     nav {
       position: fixed; top: 0; left: 0; right: 0; height: 74px;
-      display: flex; align-items: center;
+      display: flex; align-items: center; justify-content: space-between;
       padding: 0 7%;
       background: rgba(3,6,13,.58);
       backdrop-filter: blur(18px);
@@ -80,21 +101,31 @@
       z-index: 100;
     }
     .brand {
-      display: flex; align-items: center; gap: 12px;
+      display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit;
       font-weight: 800; letter-spacing: -.5px; font-size: 20px;
     }
-    .brand-icon { width: 34px; height: 34px; display: grid; place-items: center; }
-    .brand-icon img { width: 34px; height: 34px; object-fit: contain; }
+    .brand img { width: 34px; height: 34px; object-fit: contain; }
+    .nav-links { display: flex; align-items: center; gap: 30px; }
+    .nav-links a { color: #8494b3; text-decoration: none; font-size: 14px; transition: .25s; }
+    .nav-links a:hover { color: #fff; text-shadow: 0 0 15px rgba(80,150,255,.7); }
+    .nav-cta { padding: 9px 20px; font-size: 13px; }
 
     /* HERO */
     .hero {
-      min-height: 66vh; display: flex; flex-direction: column;
+      min-height: 92vh; display: flex; flex-direction: column;
       justify-content: center; align-items: center; text-align: center;
-      padding: 140px 20px 60px;
+      padding: 130px 20px 70px;
     }
     .hero-logo {
-      width: 96px; height: 96px; object-fit: contain; margin-bottom: 28px;
+      width: 96px; height: 96px; object-fit: contain; margin-bottom: 26px;
       filter: drop-shadow(0 0 18px rgba(255,255,255,.35));
+      animation: fadeDown .8s ease both;
+    }
+    .badge {
+      padding: 8px 14px; border: 1px solid rgba(65,135,255,.25);
+      background: rgba(30,90,190,.08); border-radius: 999px;
+      color: #77aaff; font-size: 12px; font-weight: 600; letter-spacing: .5px;
+      margin-bottom: 22px; box-shadow: 0 0 25px rgba(20,100,255,.08);
       animation: fadeDown .8s ease both;
     }
     .hero h1 {
@@ -105,9 +136,13 @@
       animation: fadeUp .8s ease .1s both;
     }
     .hero p {
-      max-width: 560px; color: #7f8ca5; margin-top: 25px;
+      max-width: 600px; color: #7f8ca5; margin-top: 24px;
       line-height: 1.8; font-size: 16px;
       animation: fadeUp .8s ease .2s both;
+    }
+    .hero-actions {
+      display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+      margin-top: 34px; animation: fadeUp .8s ease .3s both;
     }
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(25px); }
@@ -118,75 +153,95 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* DISCORD BUTTON */
-    .discord-btn {
-      display: inline-flex; align-items: center; gap: 10px;
-      margin-top: 34px; padding: 14px 28px;
-      border-radius: 999px; text-decoration: none;
-      color: #fff; font-size: 15px; font-weight: 700;
-      background: linear-gradient(135deg, #1468ff, #0633a9);
-      border: 1px solid rgba(120,170,255,.35);
-      box-shadow: 0 0 28px rgba(20,104,255,.4), inset 0 0 12px rgba(255,255,255,.12);
-      transition: transform .25s ease, box-shadow .25s ease;
-      animation: fadeUp .8s ease .3s both;
+    /* SECTIONS */
+    section.block { width: min(1100px, 90%); margin: 0 auto; padding: 90px 0 30px; }
+    .section-head { text-align: center; margin-bottom: 50px; }
+    .section-head h2 {
+      font-size: clamp(30px, 5vw, 46px); letter-spacing: -1.5px; font-weight: 800; color: #f4f7ff;
     }
-    .discord-btn:hover, .discord-btn:focus-visible {
-      transform: translateY(-3px);
-      box-shadow: 0 0 42px rgba(40,125,255,.65), inset 0 0 12px rgba(255,255,255,.18);
-      outline: none;
-    }
+    .section-head p { color: #7f8ca5; margin: 16px auto 0; max-width: 560px; line-height: 1.8; font-size: 15px; }
 
-    /* LINK CARDS */
-    main { width: min(1050px, 90%); margin: 0 auto; padding-bottom: 120px; }
-    .links {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 22px;
-      animation: fadeUp .8s ease .3s both;
+    /* FEATURE CARDS */
+    .features {
+      display: grid; gap: 22px;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     }
-    .link-card {
-      position: relative; display: block; overflow: hidden;
-      text-decoration: none; color: inherit;
+    .feature {
+      position: relative; overflow: hidden;
       background: linear-gradient(145deg, rgba(18,31,58,.62), rgba(5,10,21,.78));
       border: 1px solid rgba(90,145,255,.12);
-      border-radius: 24px; padding: 38px;
+      border-radius: 24px; padding: 34px;
       box-shadow: 0 20px 80px rgba(0,0,0,.28), inset 0 1px rgba(255,255,255,.025);
-      transition: border-color .3s ease, box-shadow .3s ease, transform .3s ease;
+      opacity: 0; transform: translateY(35px);
+      transition: opacity .7s ease, transform .7s ease, border-color .3s ease, box-shadow .3s ease;
     }
-    .link-card::before {
+    .feature.visible { opacity: 1; transform: translateY(0); }
+    .feature:hover {
+      border-color: rgba(70,135,255,.3);
+      box-shadow: 0 25px 90px rgba(0,0,0,.35), 0 0 40px rgba(25,95,255,.06), inset 0 1px rgba(255,255,255,.035);
+    }
+    .feature::before {
       content: ""; position: absolute; width: 180px; height: 180px;
       right: -100px; top: -100px; border-radius: 50%;
       background: #1468ff; filter: blur(90px); opacity: .08; pointer-events: none;
     }
-    .link-card:hover, .link-card:focus-visible {
-      border-color: rgba(70,135,255,.35);
-      box-shadow: 0 25px 90px rgba(0,0,0,.35), 0 0 40px rgba(25,95,255,.08), inset 0 1px rgba(255,255,255,.035);
-      transform: translateY(-4px);
-      outline: none;
-    }
-    .link-label {
+    .feature .num {
       color: #4389ff; font-size: 12px; font-weight: 700;
       letter-spacing: 1.5px; margin-bottom: 12px; text-transform: uppercase;
     }
-    .link-card h2 { font-size: 24px; margin-bottom: 12px; color: #f4f7ff; }
-    .link-card p { color: #9ba8bf; line-height: 1.8; font-size: 14px; margin-bottom: 22px; }
-    .link-go { color: #72a8ff; font-size: 14px; font-weight: 600; }
+    .feature h3 { font-size: 21px; margin-bottom: 10px; color: #f4f7ff; }
+    .feature p { color: #9ba8bf; line-height: 1.8; font-size: 14px; }
+
+    /* CTA */
+    .cta {
+      text-align: center; padding: 70px 30px;
+      background: linear-gradient(145deg, rgba(18,31,58,.62), rgba(5,10,21,.78));
+      border: 1px solid rgba(90,145,255,.12); border-radius: 28px;
+      box-shadow: 0 20px 80px rgba(0,0,0,.28);
+      opacity: 0; transform: translateY(35px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .cta.visible { opacity: 1; transform: translateY(0); }
+    .cta h2 { font-size: clamp(28px, 5vw, 42px); letter-spacing: -1.5px; font-weight: 800; color: #f4f7ff; }
+    .cta p { color: #7f8ca5; margin: 14px 0 30px; font-size: 15px; }
+    .cta .hero-actions { margin-top: 0; animation: none; }
+    .after-cta { height: 100px; }
 
     /* FOOTER */
     footer {
-      border-top: 1px solid rgba(80,130,220,.1); padding: 35px 7%;
-      text-align: center; color: #53627c; font-size: 12px;
+      border-top: 1px solid rgba(80,130,220,.1); padding: 60px 7% 30px;
+      color: #53627c; font-size: 13px;
     }
-    footer strong { color: #779ce0; }
+    .foot-grid {
+      display: grid; gap: 40px; max-width: 1100px; margin: 0 auto;
+      grid-template-columns: 1.6fr 1fr 1fr 1fr;
+    }
+    .foot-brand { display: flex; align-items: center; gap: 12px; color: #eaf1ff; font-weight: 800; font-size: 18px; margin-bottom: 14px; }
+    .foot-brand img { width: 30px; height: 30px; object-fit: contain; }
+    .foot-grid p { line-height: 1.8; max-width: 300px; }
+    .foot-grid h4 { color: #eaf1ff; font-size: 13px; margin-bottom: 14px; letter-spacing: .5px; }
+    .foot-grid a { display: block; color: #6f7f9c; text-decoration: none; margin-bottom: 10px; transition: .2s; }
+    .foot-grid a:hover { color: #fff; }
+    .legal {
+      max-width: 1100px; margin: 40px auto 0; padding-top: 24px;
+      border-top: 1px solid rgba(80,130,220,.08);
+      font-size: 12px; line-height: 1.8; text-align: center;
+    }
+    .legal strong { color: #779ce0; }
 
+    @media (max-width: 800px) {
+      .foot-grid { grid-template-columns: 1fr 1fr; }
+    }
     @media (max-width: 700px) {
       .cursor-dot { display: none; }
       nav { padding: 0 5%; }
+      .nav-links a:not(.btn) { display: none; }
       .hero h1 { letter-spacing: -3px; }
-      .link-card { padding: 28px; border-radius: 18px; }
+      .feature { padding: 26px; border-radius: 18px; }
     }
     @media (prefers-reduced-motion: reduce) {
       * { animation: none !important; transition: none !important; }
+      .feature, .cta { opacity: 1; transform: none; }
     }
   </style>
 </head>
@@ -202,47 +257,110 @@
   <div class="cursor-dot"></div>
 
   <nav>
-    <div class="brand">
-      <div class="brand-icon"><img src="havoc-logo.png" alt="Havoc"></div>
+    <a class="brand" href="index.html">
+      <img src="havoc-logo.png" alt="Havoc">
       HAVOC
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="terms.html">Terms</a>
+      <a href="privacy.html">Privacy</a>
+      <a class="btn btn-primary nav-cta" href="https://discord.com/oauth2/authorize?client_id=YOUR_BOT_ID&scope=bot+applications.commands" target="_blank" rel="noopener noreferrer">Add to Discord</a>
     </div>
   </nav>
 
   <section class="hero">
     <img class="hero-logo" src="havoc-logo.png" alt="Havoc logo">
+    <div class="badge">DISCORD SECURITY &amp; MODERATION</div>
     <h1>HAVOC</h1>
     <p>
-      Moderation, security, and server management for Discord.
-      Choose a page below to get started.
+      Moderation, anti-raid, anti-nuke, and logging in one bot.
+      Built to keep your Discord server safe and running smoothly.
     </p>
-
-    <a class="discord-btn" href="https://discord.com/invite/invitehavoc" target="_blank" rel="noopener noreferrer">
-      Join the Discord for more updates! →
-    </a>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="https://discord.com/oauth2/authorize?client_id=YOUR_BOT_ID&scope=bot+applications.commands" target="_blank" rel="noopener noreferrer">Add to Discord</a>
+      <a class="btn btn-ghost" href="https://discord.com/invite/invitehavoc" target="_blank" rel="noopener noreferrer">Join the Discord →</a>
+    </div>
   </section>
 
-  <main>
-    <div class="links">
-
-      <a class="link-card" href="terms.html">
-        <div class="link-label">Legal</div>
-        <h2>Terms of Service</h2>
-        <p>The rules and conditions for using Havoc in your Discord server.</p>
-        <span class="link-go">Read the terms →</span>
-      </a>
-
-      <a class="link-card" href="privacy.html">
-        <div class="link-label">Legal</div>
-        <h2>Privacy Policy</h2>
-        <p>What information Havoc collects, how it is used, and how it is protected.</p>
-        <span class="link-go">Read the policy →</span>
-      </a>
-
+  <section class="block" id="features">
+    <div class="section-head">
+      <h2>Everything your server needs to stay safe</h2>
+      <p>Havoc brings the tools staff rely on into a single bot, so you can protect your community without juggling extras.</p>
     </div>
-  </main>
+
+    <div class="features">
+      <div class="feature">
+        <div class="num">01</div>
+        <h3>Moderation</h3>
+        <p>Bans, kicks, timeouts, warnings, and message cleanup, with full control for your staff team.</p>
+      </div>
+      <div class="feature">
+        <div class="num">02</div>
+        <h3>AutoMod</h3>
+        <p>Automatically catch spam and rule-breaking content before it spreads through your server.</p>
+      </div>
+      <div class="feature">
+        <div class="num">03</div>
+        <h3>Anti-Raid</h3>
+        <p>Detect sudden waves of joins and suspicious activity, and respond before the damage is done.</p>
+      </div>
+      <div class="feature">
+        <div class="num">04</div>
+        <h3>Anti-Nuke</h3>
+        <p>Protect your channels, roles, and permissions from malicious or compromised accounts.</p>
+      </div>
+      <div class="feature">
+        <div class="num">05</div>
+        <h3>Logging</h3>
+        <p>Keep a clear record of moderation actions and server events for your staff to review.</p>
+      </div>
+      <div class="feature">
+        <div class="num">06</div>
+        <h3>Server Management</h3>
+        <p>Automation and administrative tools that keep your community organized and running.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="cta">
+      <h2>Ready to protect your server?</h2>
+      <p>Add Havoc in a few clicks, or join our Discord for updates and support.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="https://discord.com/oauth2/authorize?client_id=YOUR_BOT_ID&scope=bot+applications.commands" target="_blank" rel="noopener noreferrer">Add to Discord</a>
+        <a class="btn btn-ghost" href="https://discord.com/invite/invitehavoc" target="_blank" rel="noopener noreferrer">Join the Discord →</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="after-cta"></div>
 
   <footer>
-    <strong>HAVOC</strong> · Last Updated 2026
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand"><img src="havoc-logo.png" alt="">HAVOC</div>
+        <p>Moderation, security, and server management for Discord.</p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <a href="#features">Features</a>
+        <a href="https://discord.com/oauth2/authorize?client_id=YOUR_BOT_ID&scope=bot+applications.commands" target="_blank" rel="noopener noreferrer">Add to Discord</a>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <a href="https://discord.com/invite/invitehavoc" target="_blank" rel="noopener noreferrer">Discord</a>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <a href="terms.html">Terms of Service</a>
+        <a href="privacy.html">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="legal">
+      Havoc is an independent Discord application and is not affiliated with, endorsed by, or sponsored by Discord Inc.<br>
+      © 2026 <strong>HAVOC</strong>. All rights reserved.
+    </div>
   </footer>
 
   <script>
@@ -252,6 +370,14 @@
       dot.style.left = e.clientX + "px";
       dot.style.top = e.clientY + "px";
     });
+
+    // Scroll reveal
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add("visible");
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll(".feature, .cta").forEach(el => observer.observe(el));
 
     // Particles
     for (let i = 0; i < 35; i++) {
