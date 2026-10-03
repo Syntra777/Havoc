@@ -416,29 +416,14 @@
     // ------------------------------------------------------------
     // LIVE STATS + SERVER MARQUEE
     //
-    // AUTO-UPDATE: when your bot has a /stats endpoint, put its URL here,
-    // e.g. "https://havoc-bot.up.railway.app/stats", and the page will
-    // refresh the numbers every 60 seconds. Leave "" to use MANUAL_DATA.
+    // The bot (publish_stats in bot.py) commits stats.json to this repo every
+    // 15 minutes. The page reads that file, so the numbers and the scrolling
+    // server row always match the IDs in FEATURED_IDS.
     //
     // Expected JSON: { "users": 0, "communities": 0,
     //   "servers": [ { "name": "Server", "icon": "https://cdn.discordapp.com/...", "members": 0 } ] }
     // ------------------------------------------------------------
-    const API_URL = "";
-
-    // PLACEHOLDER DATA so the section works right now.
-    // Replace these with your real numbers and servers (or delete the
-    // entries and set API_URL). Only list servers whose owners agreed.
-    const MANUAL_DATA = {
-      users: 12500,
-      communities: 8,
-      servers: [
-        { name: "Example Server 1", icon: "", members: 5200 },
-        { name: "Example Server 2", icon: "", members: 3100 },
-        { name: "Example Server 3", icon: "", members: 1800 },
-        { name: "Example Server 4", icon: "", members: 950 },
-        { name: "Example Server 5", icon: "", members: 640 },
-      ],
-    };
+    const STATS_URL = "stats.json";
 
     const fmt = n => Number(n || 0).toLocaleString();
 
@@ -470,14 +455,9 @@
 
     async function loadStats() {
       try {
-        let data;
-        if (API_URL) {
-          const res = await fetch(API_URL, { cache: "no-store" });
-          if (!res.ok) throw new Error("bad response");
-          data = await res.json();
-        } else {
-          data = MANUAL_DATA;
-        }
+        const res = await fetch(STATS_URL + "?t=" + Date.now(), { cache: "no-store" });
+        if (!res.ok) throw new Error("stats.json not found");
+        const data = await res.json();
 
         document.getElementById("stat-users").textContent = fmt(data.users);
         document.getElementById("stat-communities").textContent = fmt(data.communities);
